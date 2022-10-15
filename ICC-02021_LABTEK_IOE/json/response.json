@@ -1,0 +1,15 @@
+{
+	"timestamp": "date time",
+	"transcationId": "string",
+	"patient": {
+		"patientId": "string"
+	},
+	"order": {
+		"testId": "string",
+		"sampleId": "string",
+		"hisNumber": "string"
+	},
+	"status": {
+		"details": "string"
+	}
+}

@@ -1,0 +1,16 @@
+<!-- $Id: destinations_LABTEK_IOE.xml 11147 2022-01-25 12:07:26Z rafalpa $ -->
+<destinations revision="$Revision: 11147 $">
+	<destination>
+		<destination-type>WEB_SERVICE</destination-type>
+		<destination-code>WS.ADXL.IN.LABTEK.OE</destination-code>
+		<connection-string>%{ESB_AS_URL_PREFIX}/scc/services/client/</connection-string>
+		<destination-sender-pool>Pool_07</destination-sender-pool>
+		<destination-sender-pool-size>0</destination-sender-pool-size>
+		<resend-possibility>2</resend-possibility>
+		<active>true</active>
+		<deprecated>false</deprecated>
+		<priority>0</priority>
+		<htmlAuditView>1</htmlAuditView>
+		<force-reload>true</force-reload>
+	</destination>
+</destinations>

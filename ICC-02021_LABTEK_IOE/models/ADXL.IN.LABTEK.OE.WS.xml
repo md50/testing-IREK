@@ -1,0 +1,1590 @@
+<!-- $Id: ADXL.IN.LABTEK.OE.WS.xml 11535 2022-03-22 13:20:59Z jzajdel $--><model>
+   <modelid>ADXL.IN.LABTEK.OE.WS</modelid>
+   <version>2.$Rev: 11535 $.1</version>
+   <dmiversion>4.1.17.0751</dmiversion>
+   <category/>
+   <modeltype>I</modeltype>
+   <changedt>$LastChangedDate: 2022-03-22 14:20:59 +0100 (wt., 22 mar 2022) $</changedt>
+   <control>
+      <currentht>8ab5f402d874c8215985d707700c7bca6253806b</currentht>
+      <parentht>ba0c1c470e92a442a3e462ce8beb11419f141055</parentht>
+      <dlsversion>1</dlsversion>
+   </control>
+   <config>
+      <propertyconversion>false</propertyconversion>
+      <download enabled="false">
+         <groupidpattern/>
+         <queueidpattern/>
+         <downloadnewldlonly>true</downloadnewldlonly>
+         <downloadcontainer>false</downloadcontainer>
+         <downloadqueues>false</downloadqueues>
+         <sendldlpropertiesonly>false</sendldlpropertiesonly>
+         <calculateroutingcodes>false</calculateroutingcodes>
+         <downloadack>false</downloadack>
+         <resumequeueafterupdate>false</resumequeueafterupdate>
+         <supportupdate>D</supportupdate>
+      </download>
+      <translations/>
+      <resadjs/>
+      <misctables/>
+   </config>
+   <esbconf>
+      <components>
+         <smxcomponent code="00_httpReceiver" dispnum="-1" type="http receiver">
+            <compprops>
+               <property code="inboundMarshaler" dispnum="-1" type="ENUM">
+                  <value>HTTP_RCV_PARAMS</value>
+                  <enums>
+                     <string>HTTP_RCV_COOKIES</string>
+                     <string>HTTP_RCV</string>
+                     <string>HTTP_RCV_SOAP</string>
+                     <string>HTTP_RCV_PARAMS</string>
+                     <string>HTTP_BC_PARAMS</string>
+                  </enums>
+                  <required>false</required>
+               </property>
+               <property code="outboundMarshaler" dispnum="-1" type="ENUM">
+                  <value>HTTP_RCV_PARAMS</value>
+                  <enums>
+                     <string>HTTP_RCV_COOKIES</string>
+                     <string>HTTP_RCV</string>
+                     <string>HTTP_RCV_SOAP</string>
+                     <string>HTTP_RCV_PARAMS</string>
+                     <string>HTTP_BC_PARAMS</string>
+                  </enums>
+                  <required>false</required>
+               </property>
+               <property code="outboundMarshalerProperties" dispnum="-1" type="PROPERTIES">
+                  <value>contentType=application/json
+respondCode=xpath:/Message/Header/respondCode</value>
+                  <required>false</required>
+               </property>
+               <property code="service" dispnum="29" type="STRING">
+                  <value>${serviceName}</value>
+                  <required>true</required>
+               </property>
+               <property code="soap" dispnum="33" type="BOOLEAN">
+                  <value>false</value>
+                  <required>false</required>
+               </property>
+               <property code="sccsec.active" dispnum="33" type="BOOLEAN">
+                  <value>${authenticationEnabled}</value>
+                  <required>false</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+         <smxcomponent code="01_json2xml" dispnum="-1" type="marshaler">
+            <compprops>
+               <property code="marshalType" dispnum="2" type="ENUM">
+                  <value>JSON2XML</value>
+                  <enums>
+                     <string>XMLHL7v2_old</string>
+                     <string>HL7XML</string>
+                     <string>JSON2XML</string>
+                     <string>EXTRN</string>
+                     <string>XMLASTMv2LW</string>
+                     <string>XLS_CSV_TAB</string>
+                     <string>AGENT</string>
+                     <string>XLS_CSV</string>
+                     <string>DATABEAN</string>
+                     <string>NM_PROPS</string>
+                     <string>XMLHL7</string>
+                     <string>PLOTS</string>
+                     <string>2TSV</string>
+                     <string>GRAPH</string>
+                     <string>XMLASTMv2</string>
+                     <string>2CSV</string>
+                     <string>HL7XMLv2</string>
+                     <string>XML2JSON_XSD</string>
+                     <string>CSV</string>
+                     <string>XMLHL7v2</string>
+                     <string>GENERIC</string>
+                     <string>TSV</string>
+                     <string>MAIL_PROPS</string>
+                     <string>XML2JSON</string>
+                     <string>HTML2XML</string>
+                     <string>XMLHL7v2LW</string>
+                  </enums>
+                  <required>true</required>
+               </property>
+               <property code="properties" dispnum="-1" type="PROPERTIES">
+                  <value><![CDATA[messageTransformer.parser.expandAllArrays=true
+attachmentEncoding=base64
+encoding=none]]></value>
+                  <required>false</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+         <smxcomponent code="02_validator" type="xsl transformation" dispnum="5">
+				<compprops>
+					<property code="xsl" type="X" dispnum="0">
+						<value><![CDATA[<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:mom="http://mom.scc.com/" xmlns:functx="http://www.functx.com" xmlns:saxon="http://saxon.sf.net/">
+	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+	
+	<!-- Variables -->
+	<xsl:variable name="message" select="if ( /join/Message ) then /join/Message else /Message" />
+	
+	<xsl:variable name="validatorGenericSetup">
+		<xsl:variable name="setup" select=" if ( unparsed-text-available('generic_resources/validatorSetup.xml') ) then document( 'generic_resources/validatorSetup.xml' )/validators/validator else '' " />
+		
+		<xsl:call-template name="validatorMatch">
+			<xsl:with-param name="setup" select="$setup" />
+		</xsl:call-template>
+	</xsl:variable>
+	
+	<xsl:variable name="validatorClientSetup">
+		<xsl:variable name="setup" select=" if ( unparsed-text-available('client_resources/validatorSetup.xml') ) then document( 'client_resources/validatorSetup.xml' )/validators/validator else '' " />
+		
+		<xsl:call-template name="validatorMatch">
+			<xsl:with-param name="setup" select="$setup" />
+		</xsl:call-template>
+	</xsl:variable>
+	
+	<xsl:variable name="validatorFinalSetup">
+		<xsl:for-each select="$validatorGenericSetup/validator[ not(@id = $validatorClientSetup/validator/@id) ]">
+			<xsl:copy-of select="current()" />
+		</xsl:for-each>
+		
+		<xsl:for-each select="$validatorClientSetup/validator">
+			<xsl:copy-of select="current()" />
+		</xsl:for-each>
+	</xsl:variable>
+	
+	<xsl:variable name="validationResult">
+		<xsl:for-each select="$validatorFinalSetup/validator[ actionSet/action/@id = 'reject' ]/field">
+			<xsl:call-template name="validationRejectionInformation" />
+		</xsl:for-each>
+		
+		<xsl:for-each select="$validatorFinalSetup/validator[ actionSet/action/@id = 'information' ]/field">
+			<xsl:call-template name="validationRejectionInformation" />
+		</xsl:for-each>
+	</xsl:variable>
+		
+	
+	<!-- Matching templates -->
+	
+	<xsl:template match="/*">
+		<xsl:copy>
+			<xsl:copy-of select="@*"/>
+			<xsl:apply-templates select="*" />
+			
+			<xsl:element name="ValidatorSetup">
+			
+				<xsl:comment> Validation of all generic rules </xsl:comment>
+				<xsl:element name="Validators">
+					<xsl:attribute name="id" select=" 'Generic' "/>
+					<xsl:copy-of select="$validatorGenericSetup" />
+				</xsl:element>
+				
+				<xsl:comment> Validation of all client rules </xsl:comment>
+				<xsl:element name="Validators">
+					<xsl:attribute name="id" select=" 'Client' "/>
+					<xsl:copy-of select="$validatorClientSetup" />
+				</xsl:element>
+				
+				<xsl:comment> Comparision of all rules - if any client rule has the same id as generic one then this client rule is taken instead of generic one </xsl:comment>
+				<xsl:element name="Validators">
+					<xsl:attribute name="id" select=" 'Final' "/>
+					<xsl:copy-of select="$validatorFinalSetup" />
+				</xsl:element>
+				
+			</xsl:element>
+			
+			<xsl:element name="ValidationResult">
+				<xsl:copy-of select="$validationResult" />
+			</xsl:element>
+		</xsl:copy>
+	</xsl:template>
+	
+	<xsl:template match="*">
+		<xsl:variable name="name" select="local-name()" />
+		<xsl:variable name="parent" select="../local-name()" />
+		<xsl:variable name="ancestorsNames">
+			<xsl:for-each select="ancestor::*">
+				<xsl:value-of select="concat( local-name(), '/' )" />
+			</xsl:for-each>
+			<xsl:value-of select="$name" />
+		</xsl:variable>
+		<xsl:variable name="originalValue" select="." />
+		
+		<xsl:choose>
+			<xsl:when test="$validatorFinalSetup/validator/field[ tokenize( @xpath, '/' )[ last() ] = $name ]">
+				<xsl:variable name="validatorsId">
+					<xsl:for-each select="$validatorFinalSetup/validator/field[ tokenize( @xpath, '/' )[ last() ] = $name and contains( $ancestorsNames, @xpath ) ]">
+						<xsl:value-of select="concat( ../@id, ', ' )" />
+					</xsl:for-each>
+				</xsl:variable>
+				
+				<xsl:variable name="validator" select="$validatorFinalSetup/validator[ contains( $validatorsId, @id ) ]"/>
+				
+				<xsl:choose>
+					<!-- Handling of truncate, upperCase, lowerCase -->
+					<xsl:when test="$validator[ actionSet/action/@id = ( 'truncate', 'upperCase', 'lowerCaseId' ) ] ">
+						
+						<xsl:variable name="maxLength" select="$validator[ actionSet/action/@id = 'truncate' ][1]/actionSet/action/@maxLength" />
+						<xsl:variable name="truncateId" select="$validator[ actionSet/action/@id = 'truncate' ][1]/@id" />
+						<xsl:variable name="valueTruncate">
+							<xsl:value-of select="if ( $maxLength ) then substring( $originalValue, 1, number( $maxLength ) ) else $originalValue" />
+						</xsl:variable>
+						
+						<xsl:variable name="upperCase" select="$validator[ actionSet/action/@id = 'upperCase' ][1]" />
+						<xsl:variable name="upperCaseId" select="$validator[ actionSet/action/@id = 'upperCase' ][1]/@id" />
+						<xsl:variable name="valueUpperCase">
+							<xsl:value-of select="if ( $upperCase ) then upper-case( $valueTruncate ) else $valueTruncate" />
+						</xsl:variable>
+						
+						<xsl:variable name="lowerCase" select="$validator[ actionSet/action/@id = 'lowerCase' ][1]" />
+						<xsl:variable name="lowerCaseId" select="$validator[ actionSet/action/@id = 'lowerCase' ][1]/@id" />
+						<xsl:variable name="valueLowerCase">
+							<xsl:value-of select="if ( $lowerCase ) then lower-case( $valueUpperCase ) else $valueUpperCase" />
+						</xsl:variable>
+						
+						<xsl:if test="$maxLength or $upperCase or $lowerCase">
+							<xsl:comment>Field modified by validator: <xsl:value-of select="$validatorsId" /></xsl:comment>
+						</xsl:if>
+						<xsl:element name="{$name}">
+							<xsl:value-of select="$valueLowerCase" />
+						</xsl:element>
+						
+					</xsl:when>
+					
+					<!-- Handling of set - regex case -->
+					<xsl:when test=" $validator[ actionSet/action[ @id = 'set' and @regex ] ] ">
+						<xsl:variable name="validatorId" select="$validator[ actionSet/action/@id = 'set' and actionSet/action/@regex ][1]/@id" />
+						<xsl:variable name="regex" select="$validator/actionSet/action[ @id = 'set' and @regex ]/@regex" />
+						<xsl:variable name="actionRegexValue" select="$validator/actionSet/action[ @id = 'set'  and @regex ]" />
+						<xsl:variable name="validateRegex" select="matches($originalValue, $regex)" />		
+						
+						<xsl:if test="$regex and not( $validateRegex )">
+							<xsl:comment>Field modified by validator: <xsl:value-of select="$validatorId" /></xsl:comment>
+						</xsl:if>
+						<xsl:element name="{$name}">
+							<xsl:value-of select="if ( $regex and not( $validateRegex ) ) then $actionRegexValue else $originalValue" />
+						</xsl:element>
+					</xsl:when>
+					
+					<!-- Handling of set - not regex case -->
+					<xsl:when test="$validator[ actionSet/action[ @id = 'set' ] ] ">
+						<xsl:variable name="actionValue" select="$validator/actionSet/action[ @id = 'set' and ( not( @from ) or @from = $originalValue ) ]" />
+						<xsl:variable name="from" select="$validator[ actionSet/action/@id = 'set' and @from = $originalValue ]/actionSet/action/@from" />
+						
+						<xsl:if test="not( $from ) or $from = $originalValue">
+							<xsl:comment>Field modified by validator: <xsl:value-of select="$validatorsId" /></xsl:comment>
+						</xsl:if>
+						<xsl:element name="{$name}">
+							<xsl:value-of select="if ( not( $from ) or $from = $originalValue ) then $actionValue else $originalValue" />
+						</xsl:element>
+					</xsl:when>
+					
+					<!-- Handling of clear -->
+					<xsl:when test="$validator[ actionSet/action/@id = 'clear' ] ">
+						<xsl:variable name="validatorId" select="$validator[ actionSet/action/@id = 'clear' ][1]/@id" />
+						
+						<xsl:comment>Field modified by validator: <xsl:value-of select="$validatorId" /></xsl:comment>
+						<xsl:element name="{$name}" />
+					</xsl:when>
+					
+					<xsl:otherwise>
+						<xsl:copy>
+							<xsl:copy-of select="@*" />
+							<xsl:value-of select=" if ( not( exists( * ) ) ) then . else '' " />
+							<xsl:apply-templates select="*"/>
+						</xsl:copy>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			
+			<xsl:otherwise>
+				<xsl:copy>
+					<xsl:copy-of select="@*" />
+					<xsl:value-of select=" if ( not( exists( * ) ) ) then . else '' " />
+					<xsl:apply-templates select="*"/>
+				</xsl:copy>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!-- template to validate matching of event fields from validator setup -->
+	<xsl:template name="validatorMatch">
+		<xsl:param name="setup" />
+		
+		<xsl:choose>
+			<xsl:when test="$setup">
+				<xsl:for-each select="$setup">
+					<xsl:variable name="validatorID" select="@id"/>
+					
+					<xsl:variable name="matchEventFields">
+						<xsl:for-each select="eventFields/field">
+							<xsl:variable name="xpath" select="@xpath"/>
+							<xsl:variable name="attribute" select="@attribute"/>
+							<xsl:variable name="optionalSeg" select="@optionalSeg"/>
+							<xsl:variable name="value" select="value"/>
+							
+							<xsl:variable name="canonicalValue">
+								<xsl:choose>
+									<xsl:when test="string(@xpath)">
+										<xsl:value-of select="saxon:evaluate(concat('$p1//',@xpath), $message)"/>
+										<!--<xsl:evaluate xpath="@xpath" context-item="$message"/>-->
+									</xsl:when>
+									
+									<xsl:when test="$attribute">
+										<xsl:value-of select="$message//Event/msg/attributes[ name = $attribute ]/value" />
+									</xsl:when>
+								</xsl:choose>
+							</xsl:variable>
+							
+							<xsl:variable name="matchStat" select="if ( match/text() = 'true' or not( match/text() ) ) then 'true' else 'false' "/>
+							
+							<xsl:variable name="fieldMatchStat">
+								<xsl:choose>
+									<xsl:when test="not( $value = '*' ) and not( $value = $canonicalValue )">
+										<xsl:value-of select="if ( $optionalSeg = 'true' ) then 'true' else 'false' "/>
+									</xsl:when>
+										
+									<xsl:otherwise>
+										<xsl:value-of select="if ( $value = '*' or $value = $canonicalValue ) then 'true' else 'false' " />
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:variable>
+							
+							<xsl:value-of select="if ( ($matchStat = 'true' and $fieldMatchStat = 'true') or ($matchStat = 'false' and $fieldMatchStat = 'false') ) then 'true' else 'false' " />
+							
+						</xsl:for-each>
+					</xsl:variable>
+					
+					<xsl:choose>
+						<xsl:when test="contains( $matchEventFields, 'false' )">
+							<xsl:element name="info">
+								<xsl:value-of select=" concat( 'Validation rule: ', $validatorID, ' does not match to input' ) " />
+							</xsl:element>
+						</xsl:when>
+						
+						<xsl:otherwise>
+							<xsl:copy-of select="current()" />
+						</xsl:otherwise>
+					</xsl:choose>
+					
+				</xsl:for-each>
+			</xsl:when>
+			
+			<xsl:otherwise>
+				<xsl:element name="info">
+					<xsl:text>Warning: validator is enabled (skipMsgValidation = 'false'), but no validation rules are defined (validator.xml file is not available) - please, check/correct the setup.</xsl:text>
+				</xsl:element>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template name="validationRejectionInformation">
+		<xsl:variable name="xpath" select="@xpath" />
+		<xsl:variable name="canonicalNode" select="saxon:evaluate(concat('$p1//',$xpath), $message/Data/root)"/>
+		
+		<xsl:for-each select="../actionSet">
+			<xsl:variable name="maxLength" select="action/@maxLength" />
+			<xsl:variable name="regex" select="action/@regex" />
+			<xsl:variable name="actionValue" select="action" />
+			<xsl:variable name="actionId" select="action/@id" />
+			
+			<xsl:choose>
+				<!-- required field was not sent or is empty -->
+				<xsl:when test="not( $canonicalNode/text() ) and not( $maxLength ) and not( $regex )">
+					<xsl:call-template name="createDropWarningElement">
+						<xsl:with-param name="name" select=" if ( $actionId = 'reject' ) then 'drop' else 'warning' " />
+					</xsl:call-template>
+				</xsl:when>
+				
+				<xsl:otherwise>
+					<!-- required field had wrong value -->
+					<xsl:if  test="string( $actionValue ) and not( $canonicalNode = $actionValue )">
+						<xsl:call-template name="createDropWarningElement">
+							<xsl:with-param name="name" select=" if ( $actionId = 'reject' ) then 'drop' else 'warning' " />
+						</xsl:call-template>
+					</xsl:if>
+					
+					<!-- required field was too long -->
+					<xsl:if  test="$canonicalNode[ $maxLength and string-length( text() ) &gt; number( $maxLength ) ]">
+						<xsl:call-template name="createDropWarningElement">
+							<xsl:with-param name="name" select=" if ( $actionId = 'reject' ) then 'drop' else 'warning' " />
+						</xsl:call-template>
+					</xsl:if>
+					
+					<!-- required field did not match to regex -->
+					<xsl:if  test="$canonicalNode[ $regex and not( matches( text(), $regex ) ) ]">
+						<xsl:call-template name="createDropWarningElement">
+							<xsl:with-param name="name" select=" if ( $actionId = 'reject' ) then 'drop' else 'warning' " />
+						</xsl:call-template>
+					</xsl:if>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:for-each>
+	</xsl:template>
+	
+	<xsl:template name="createDropWarningElement">
+		<xsl:param name="name">warning</xsl:param>
+		<xsl:element name="{$name}">
+			<xsl:attribute name="processingCode" select="processingCode" />
+			<xsl:attribute name="resultCode" select="resultCode" />
+			<xsl:attribute name="ruleId" select="../@id" />
+			<xsl:value-of select="descriptionText" />
+		</xsl:element>
+	</xsl:template>
+	
+</xsl:stylesheet>
+]]></value>
+						<required>true</required>
+					</property>
+				</compprops>
+		 </smxcomponent>
+		 <smxcomponent code="03_ext2canonical" dispnum="-1" type="xsl transformation">
+            <compprops>
+               <property code="parameters" dispnum="-1" type="PROPERTIES">
+                  <value><![CDATA[hisID=${hisID}
+rackIdFieldCode=${rackIdFieldCode}
+rackPosFieldCode=${rackPosFieldCode}
+collectionTechnician=${collectionTechnician}
+receiveTechnician=${receiveTechnician}
+defaultDoctor=${defaultDoctor}
+defaultClinic=${defaultClinic}
+defaultSex=${defaultSex}]]></value>
+                  <required>false</required>
+               </property>
+               <property code="xsl" dispnum="23" type="XML">
+                  <value><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: ADXL.IN.LABTEK.OE.WS.xml 11535 2022-03-22 13:20:59Z jzajdel $ -->
+<xsl:stylesheet version="2.0" exclude-result-prefixes="#all"
+xmlns:nm="java:com.scc.smx.components.saxon.utils.NormalizedMessageUtil"
+xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+xmlns:xs="http://www.w3.org/2001/XMLSchema"
+xmlns:fun="http://functions.scc.com">
+	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="no"/>
+	<!-- Params/Variables -->
+	<xsl:param name="hisID"/>
+	<xsl:param name="rackIdFieldCode"/>
+	<xsl:param name="rackPosFieldCode"/>
+	<xsl:param name="collectionTechnician"/>
+	<xsl:param name="receiveTechnician"/>
+	<xsl:param name="defaultDoctor"/>
+	<xsl:param name="defaultClinic"/>
+	<xsl:param name="defaultSex"/>
+  
+	<xsl:template match="node() | @*" mode="#all" priority="-1"/>
+	<!-- The root match. -->
+	<xsl:template match="/">
+		<xsl:if test="Message/Data/HttpHeaders/header[@name='SCC-INT-CONSOLE']"><xsl:sequence select="nm:setPropertyStr('intConsole','true')"/></xsl:if>
+		<xsl:apply-templates select="Message/Data/root"/>
+	</xsl:template>
+	<xsl:template match="root">
+		<Message>
+			<Header>
+				<xsl:copy-of select="/Message/Header/*"/>
+				<Action><xsl:value-of select="substring(../Parameters/@pathInfo,2)"/></Action>
+			</Header>
+			<Data>
+				<msg1>
+					<msh>
+						<user>SCC</user>
+						<systemCode><xsl:value-of select="$hisID"/></systemCode>
+					</msh>
+					<xsl:apply-templates select="patient" mode="pid"/>
+				</msg1>
+			</Data>
+		</Message>
+	</xsl:template>
+	
+	<xsl:template match="patient" mode="pid">
+		<pidLevel>
+			<pid>
+				<xsl:apply-templates mode="#current"/>
+				<xsl:if test="not(string(sex))"><sex><xsl:value-of select="$defaultSex"/></sex></xsl:if>
+			</pid>
+			<xsl:apply-templates select="." mode="pv1"/>
+		</pidLevel>
+	</xsl:template>
+	<xsl:template match="patientId" mode="pid">
+		<xsl:sequence select="nm:setPropertyStr('patId',text())"/>
+		<sccMrn><xsl:value-of select="."/></sccMrn>
+	</xsl:template>
+	<xsl:template match="DOB" mode="pid"><dateOfBirth><xsl:value-of select="."/></dateOfBirth><dateOfBirthEntered>true</dateOfBirthEntered></xsl:template>
+	<xsl:template match="sex[text()]" mode="pid"><sex><xsl:value-of select="."/></sex></xsl:template>
+	<xsl:template match="ethnicity[text()]" mode="pid"><ethnicity><xsl:value-of select="."/></ethnicity></xsl:template>
+	
+	<xsl:template match="patient" mode="pv1">
+		<pv1Level>
+			<pv1>
+				<xsl:apply-templates select="../order/sampleId" mode="#current"/>
+				<xsl:if test="string(translate($defaultClinic,'-',''))">
+					<unitOrLocation><enterpriseId><xsl:value-of select="$defaultClinic"/></enterpriseId></unitOrLocation>
+				</xsl:if>
+				<xsl:if test="string(translate($defaultDoctor,'-',''))">
+					<attendingDoctor><doctorId><xsl:value-of select="$defaultDoctor"/></doctorId></attendingDoctor>
+					<admittingDoctor><doctorId><xsl:value-of select="$defaultDoctor"/></doctorId></admittingDoctor>
+					<consultingDoctor><doctorId><xsl:value-of select="$defaultDoctor"/></doctorId></consultingDoctor>
+				</xsl:if>
+			</pv1>
+			<xsl:apply-templates select="../order" mode="orc"/>
+		</pv1Level>
+	</xsl:template>
+	<xsl:template match="sampleId" mode="pv1"><preadmitNumber><xsl:value-of select="."/></preadmitNumber></xsl:template>
+	
+	<xsl:template match="order" mode="orc">
+		<orcLevel>
+			<orc>
+				<xsl:apply-templates mode="#current"/>
+				<xsl:if test="string(translate($defaultClinic,'-',''))">
+					<enterersLocation><enterpriseId><xsl:value-of select="$defaultClinic"/></enterpriseId></enterersLocation>
+				</xsl:if>
+				<xsl:if test="string(translate($defaultDoctor,'-',''))">
+					<orderingProvider><doctorId><xsl:value-of select="$defaultDoctor"/></doctorId></orderingProvider>
+				</xsl:if>
+			</orc>
+			<xsl:apply-templates select="." mode="obr"/>
+		</orcLevel>
+	</xsl:template>
+	<xsl:template match="sampleId" mode="orc">
+		<xsl:sequence xmlns:nm="java:com.scc.smx.components.saxon.utils.NormalizedMessageUtil" select="nm:setPropertyStr('sampleId',text())"/>
+		<auxiliaryOrderNumber><xsl:value-of select="."/></auxiliaryOrderNumber>
+	</xsl:template>
+	
+	<xsl:template match="order" mode="obr">
+		<obrLevel>
+			<obr>
+				<xsl:apply-templates mode="#current"/>
+				<xsl:if test="string(translate($defaultClinic,'-',''))">
+					<enterersLocation><enterpriseId><xsl:value-of select="$defaultClinic"/></enterpriseId></enterersLocation>
+				</xsl:if>
+				<xsl:if test="string(translate($defaultDoctor,'-',''))">
+					<orderingProvider><doctorId><xsl:value-of select="$defaultDoctor"/></doctorId></orderingProvider>
+				</xsl:if>
+			</obr>
+			<xsl:apply-templates select="." mode="spm"/>
+			<xsl:apply-templates select="promptTests"/>
+		</obrLevel>
+	</xsl:template>
+	<xsl:template match="testId" mode="obr">
+		<xsl:sequence select="nm:setPropertyStr('testId',./text())"/>
+		<testId><xsl:value-of select="."/></testId>
+	</xsl:template>
+	
+	<xsl:template match="order" mode="spm">
+		<spmLevel>
+			<spm>
+				<xsl:apply-templates select="sampleId | specimenType | collectedDT" mode="#current"/>
+				<collectorId><employeeId><xsl:value-of select="$collectionTechnician"/></employeeId></collectorId>
+			</spm>
+			<xsl:apply-templates select="rackId[string($rackIdFieldCode) and not($rackIdFieldCode = '-') and not($rackIdFieldCode = 'NOT_DEFINED')] | rackPos[string($rackPosFieldCode) and not($rackPosFieldCode = '-') and not($rackPosFieldCode = 'NOT_DEFINED')] " mode="#current"/>
+			<xsl:apply-templates select="." mode="sac"/>
+		</spmLevel>
+	</xsl:template>
+	<xsl:template match="sampleId" mode="spm"><externalSpecimenNumber><xsl:value-of select="."/></externalSpecimenNumber></xsl:template>
+	<xsl:template match="specimenType" mode="spm"><specimenType><xsl:value-of select="."/></specimenType></xsl:template>
+	<xsl:template match="collectedDT" mode="spm"><collectedDateTime><xsl:value-of select="."/></collectedDateTime></xsl:template>
+	<xsl:template match="rackId" mode="spm">
+		<zmuLevel>
+			<zmu>
+				<id><xsl:value-of select="$rackIdFieldCode"/></id>
+				<value><xsl:value-of select="."/></value>
+			</zmu>
+		</zmuLevel>
+	</xsl:template>
+	<xsl:template match="rackPos" mode="spm">
+		<zmuLevel>
+			<zmu>
+				<id><xsl:value-of select="$rackPosFieldCode"/></id>
+				<value><xsl:value-of select="."/></value>
+			</zmu>
+		</zmuLevel>
+	</xsl:template>
+	
+	<xsl:template match="order" mode="sac">
+		<sacLevel>
+			<sac>
+				<xsl:apply-templates mode="sac"/>
+				<receivedBy><employeeId><xsl:value-of select="$receiveTechnician"/></employeeId></receivedBy>
+			</sac>
+		</sacLevel>
+	</xsl:template>
+	<xsl:template match="sampleId" mode="sac"><externalTubeId><xsl:value-of select="."/></externalTubeId></xsl:template>
+	<xsl:template match="receivedDT" mode="sac"><receivedDate><xsl:value-of select="."/></receivedDate></xsl:template>
+	
+	<xsl:template match="promptTests">
+		<obxLevel>
+			<obx>
+				<observationId><xsl:value-of select="promptId"/></observationId>
+				<observationValue><xsl:value-of select="promptValue"/></observationValue>
+			</obx>
+		</obxLevel>
+	</xsl:template>
+</xsl:stylesheet>]]></value>
+                  <required>true</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+         <smxcomponent code="04_translation" dispnum="-1" type="http client">
+            <compprops>
+               <property code="flow.active" dispnum="-1" type="BOOLEAN">
+                  <value>${useTS}</value>
+                  <required>false</required>
+               </property>
+               <property code="soap" dispnum="35" type="BOOLEAN">
+                  <value>false</value>
+                  <required>false</required>
+               </property>
+               <property code="timeout" dispnum="41" type="INT">
+                  <value>1200000</value>
+                  <required>false</required>
+               </property>
+               <property code="uri" dispnum="44" type="URL">
+                  <value><![CDATA[${env.SCC_URL_INT}/csf/translation/canonical/inbound]]></value>
+                  <required>true</required>
+               </property>
+               <property code="useDOM" dispnum="45" type="BOOLEAN">
+                  <value>false</value>
+                  <required>false</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+         <smxcomponent code="05_checkGI" dispnum="-1" type="jdbc query">
+            <compprops>
+               <property code="driver" dispnum="9" type="STRING">
+                  <value>oracle.jdbc.OracleDriver</value>
+                  <required>false</required>
+               </property>
+               <property code="enrichMessage" dispnum="11" type="BOOLEAN">
+                  <value>true</value>
+                  <required>false</required>
+               </property>
+               <property code="faultManagement" dispnum="12" type="ENUM">
+                  <value>FAULT_JBI</value>
+                  <enums>
+                     <string>FAULT_JBI</string>
+                     <string>FAULT_FLOW</string>
+                  </enums>
+                  <required>false</required>
+               </property>
+               <property code="jndiDataSource" dispnum="18" type="STRING">
+                  <value>GIDS</value>
+                  <required>true</required>
+               </property>
+               <property code="matchParamRegexp" dispnum="20" type="STRING">
+                  <value>\$\w+</value>
+                  <required>false</required>
+               </property>
+               <property code="query" dispnum="24" type="STRING">
+                  <value><![CDATA[select * from V_GI_TEST where GI_HIS_ORDER=$ORDER and GI_HIS_DESTINATION='HIS.TEK' and GI_HIS_BILLING = $BILLING]]></value>
+                  <required>true</required>
+               </property>
+               <property code="queryParams" dispnum="25" type="STRING">
+                  <value><![CDATA[list.count = 2
+
+  list.1.class = com.scc.smx.components.jdbc.config.QueryParameterConfig
+  list.1.placeHolder = ORDER
+  list.1.inout = in
+  list.1.xpath = /Message/Data/msg1/pidLevel/pv1Level/orcLevel/orc/auxiliaryOrderNumber
+  list.1.paramType = java.lang.String
+
+  list.2.class = com.scc.smx.components.jdbc.config.QueryParameterConfig
+  list.2.placeHolder = BILLING
+  list.2.inout = in
+  list.2.xpath = /Message/Data/msg1/pidLevel/pv1Level/pv1/preadmitNumber
+  list.2.paramType = java.lang.String]]></value>
+                  <required>false</required>
+               </property>
+               <property code="rowsXmlEnvelope" dispnum="30" type="STRING">
+                  <value>rows</value>
+                  <required>false</required>
+               </property>
+               <property code="rowXmlEnvelope" dispnum="29" type="STRING">
+                  <value>row</value>
+                  <required>false</required>
+               </property>
+               <property code="xmlEnvelope" dispnum="34" type="STRING">
+                  <value>/Message</value>
+                  <required>false</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+         <smxcomponent code="06_canocnical2geneSrv" dispnum="-1" type="xsl transformation">
+            <compprops>
+               <property code="xsl" dispnum="23" type="XML">
+                  <value><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<xsl:stylesheet version="2.0"
+xmlns:nm="java:com.scc.smx.components.saxon.utils.NormalizedMessageUtil"
+xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xsl:output method="xml" indent="yes"/>
+
+	<xsl:template match="/">
+		<xsl:choose>
+			<xsl:when test="/Message/rows/row[GI_SCC_IS_CANCEL = 'N' and GI_HIS_IS_CANCEL = 'N' and GI_SCC_TEST = /Message/Data/msg1/pidLevel/pv1Level/orcLevel/obrLevel/obr/testId]"><drop resultCode="12">Duplicated tests.</drop></xsl:when>
+			<xsl:otherwise><xsl:apply-templates select="Message/Data/msg1/pidLevel"/></xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="Message/Data/msg1/pidLevel">
+		<SubmitOrder xmlns="http://www.softcomputer.com/GeneOrderingService/">
+			<orderRequisition>
+				<xsl:call-template name="createSec"/>
+				<Patient xmlns="http://www.softcomputer.com/SoftGeneOrderingService/"><xsl:apply-templates select="pid"/></Patient>
+				<xsl:apply-templates select="pv1Level"/>
+			</orderRequisition>
+		</SubmitOrder>
+	</xsl:template>
+
+	<xsl:template match="pv1Level">
+		<xsl:apply-templates select="pv1"/>
+		<xsl:apply-templates select="orcLevel"/>
+	</xsl:template>
+	
+	<xsl:template match="orcLevel">
+		<Order xmlns="http://www.softcomputer.com/SoftGeneOrderingService/">
+			<xsl:apply-templates select="orc"/>
+			<xsl:apply-templates select="obrLevel"/>
+		</Order>
+	</xsl:template>
+	
+	<xsl:template match="pid" xmlns="http://www.softcomputer.com/SoftGeneOrderingService/">
+		<MRN><xsl:value-of select="sccMrn"/></MRN>
+		<Info>
+			<LastName><xsl:value-of select="sccMrn"/></LastName>
+			<FirstName><xsl:value-of select="sccMrn"/></FirstName>
+			<DateOfBirth><xsl:value-of select="dateOfBirth"/></DateOfBirth>
+			<Sex><xsl:value-of select="sex"/></Sex>
+			<EthnicGroup><xsl:value-of select="ethnicity"/></EthnicGroup>
+		</Info>
+	</xsl:template>
+	
+	<xsl:template match="pv1">
+		<Visit xmlns="http://www.softcomputer.com/SoftGeneOrderingService/">
+			<BillingNum><xsl:value-of select="preadmitNumber"/></BillingNum>
+			<xsl:if test="unitOrLocation/enterpriseId"><WardAdmissionID><xsl:value-of select="unitOrLocation/enterpriseId"/></WardAdmissionID></xsl:if>
+			<xsl:if test="attendingDoctor/doctorId"><AttendingDoctor><DoctorID><xsl:value-of select="attendingDoctor/doctorId"/></DoctorID></AttendingDoctor></xsl:if>
+			<xsl:if test="admittingDoctor/doctorId"><AdmittingDoctor><DoctorID><xsl:value-of select="admittingDoctor/doctorId"/></DoctorID></AdmittingDoctor></xsl:if>
+			<xsl:if test="consultingDoctor/doctorId"><ConsultingDoctor><DoctorID><xsl:value-of select="consultingDoctor/doctorId"/></DoctorID></ConsultingDoctor></xsl:if>
+		</Visit>
+	</xsl:template>
+	
+	<xsl:template match="orc" xmlns="http://www.softcomputer.com/SoftGeneOrderingService/">
+		<AuxiliaryOrder><xsl:value-of select="auxiliaryOrderNumber"/></AuxiliaryOrder>
+		<DefaultingTubeTypeLogic>S</DefaultingTubeTypeLogic>
+		<xsl:if test="/Message/rows/row"><OrderNumber><xsl:value-of select="(/Message/rows/row/GI_SCC_ORDER)[1]"/></OrderNumber></xsl:if>
+		<xsl:if test="enterersLocation/enterpriseId"><OrderingClinic><xsl:value-of select="enterersLocation/enterpriseId"/></OrderingClinic></xsl:if>
+		<xsl:if test="orderingProvider/doctorId"><RequestingDoctor><DoctorID><xsl:value-of select="orderingProvider/doctorId"/></DoctorID></RequestingDoctor></xsl:if>
+		<OrderOperation>Update</OrderOperation>
+	</xsl:template>
+
+	<xsl:template match="obrLevel" xmlns="http://www.softcomputer.com/SoftGeneOrderingService/">
+		<Tests>
+			<Test><xsl:value-of select="obr/testId"/></Test>
+			<TestRefCode><xsl:value-of select="obr/testId"/></TestRefCode>
+			<xsl:if test="obr/enterersLocation/enterpriseId"><OrdClinic><xsl:value-of select="obr/enterersLocation/enterpriseId"/></OrdClinic></xsl:if>
+			<xsl:if test="obr/orderingProvider/doctorId"><OrderingDoctor><DoctorID><xsl:value-of select="obr/orderingProvider/doctorId"/></DoctorID></OrderingDoctor></xsl:if>
+			<xsl:sequence select="nm:setPropertyStr('testId',obr/testId/text())"/>
+			<xsl:sequence select="nm:setPropertyStr('seqNr',(/Message/rows/row[GI_SCC_TEST = obr/testId/text()]/GI_SCC_SEQ,'0')[1])"/>
+			<xsl:sequence select="nm:setPropertyStr('extension',/Message/rows/row[GI_SCC_TEST = obr/testId/text()]/GI_SCC_EXT)"/>
+			<xsl:for-each select="spmLevel[spm/externalSpecimenNumber]">
+				<AttachedSpecimens>
+					<SpecimenNumber><xsl:value-of select="spm/externalSpecimenNumber"/></SpecimenNumber>
+				</AttachedSpecimens>
+			</xsl:for-each>
+			<xsl:for-each select="obxLevel">
+				<PromptTests>
+					<xsl:if test="obx/observationId">
+						<PromptTest><xsl:value-of select="obx/observationId"/></PromptTest>
+					</xsl:if>
+					<xsl:for-each select="obx/observationValue">
+						<PromptTestResult><xsl:value-of select="text()"/></PromptTestResult>
+					</xsl:for-each>
+					<xsl:for-each select="nteLevel/nte/comment">
+						<PromptTestComment>
+							<xsl:value-of select="text()"/>
+						</PromptTestComment>
+					</xsl:for-each>
+				</PromptTests>
+			</xsl:for-each>
+		</Tests>
+		<xsl:apply-templates select="spmLevel"/>
+	</xsl:template>
+	
+	<xsl:template match="spmLevel" xmlns="http://www.softcomputer.com/SoftGeneOrderingService/">
+		<Specimens>
+			<SpecimenType><xsl:value-of select="spm/specimenType"/></SpecimenType>
+			<SpecimenNumber><xsl:value-of select="spm/externalSpecimenNumber"/></SpecimenNumber>
+			<CollectedOn><xsl:value-of select="spm/collectedDateTime"/></CollectedOn>
+			<CollectedBy><xsl:value-of select="spm/collectorId/employeeId"/></CollectedBy>
+			<PartialCollectionDateTime>N</PartialCollectionDateTime>
+			<SpecimenOperation>Update</SpecimenOperation>
+			<xsl:apply-templates select="sacLevel"/>
+			<xsl:call-template name="createUserFields">
+				<xsl:with-param name="paramPath" select="zmuLevel/zmu"/>
+			</xsl:call-template>
+		</Specimens>
+	</xsl:template>
+		
+	<xsl:template match="sacLevel" xmlns="http://www.softcomputer.com/SoftGeneOrderingService/">
+		<Tubes>
+			<TubeCode><xsl:value-of select="sac/tubeType"/></TubeCode>
+			<TubeNumber><xsl:value-of select="sac/externalTubeId"/></TubeNumber>
+			<RecivedOn><xsl:value-of select="sac/receivedDate"/></RecivedOn>
+			<ReceivedBy><xsl:value-of select="sac/receivedBy/employeeId"/></ReceivedBy>
+			<!-- <SendToDestinationDepartment>false</SendToDestinationDepartment>
+			<DummyTube>N</DummyTube>
+			<TubeOperation>Update</TubeOperation> -->
+		</Tubes>
+	</xsl:template>
+	
+	<!--..........................USER FIELDS....................... -->
+	<xsl:template name="createUserFields" xmlns="http://www.softcomputer.com/SoftGeneOrderingService/">
+		<xsl:param name="paramPath"/>
+		<xsl:for-each select="$paramPath">
+			<UserFields>
+				<xsl:if test="id">
+					<FieldCode><xsl:value-of select="id"/></FieldCode>
+					<FieldRefCode><xsl:value-of select="id"/></FieldRefCode>
+				</xsl:if>
+				<xsl:if test="value">
+					<FieldValues><xsl:value-of select="value"/></FieldValues>
+				</xsl:if>
+			</UserFields>
+		</xsl:for-each>
+	</xsl:template>
+	
+	<!--..........................CREATE SECURITY SECTION ....................... -->
+	<xsl:template name="createSec">
+		<Sec xmlns="http://www.softcomputer.com/SoftGeneOrderingService/">
+			<System xmlns="http://www.softcomputer.com/CommonTypes/">ADXL</System>
+			<UserID xmlns="http://www.softcomputer.com/CommonTypes/">SCC</UserID>
+			<Terminal xmlns="http://www.softcomputer.com/CommonTypes/">PRNEC</Terminal>
+		</Sec>
+	</xsl:template>
+	
+</xsl:stylesheet>]]></value>
+                  <required>true</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+		 <smxcomponent code="07_submitOrder" dispnum="-1" type="http client">
+            <compprops>
+               <property code="soap" dispnum="35" type="BOOLEAN">
+                  <value>true</value>
+                  <required>false</required>
+               </property>
+               <property code="soapVersion" dispnum="37" type="ENUM">
+                  <value>1.1</value>
+                  <enums>
+                     <string>1.1</string>
+                     <string>1.2</string>
+                  </enums>
+                  <required>false</required>
+               </property>
+               <property code="timeout" dispnum="41" type="INT">
+                  <value>180000</value>
+                  <required>false</required>
+               </property>
+               <property code="uri" dispnum="44" type="URL">
+                  <value><![CDATA[${env.SCC_URL_INT}/gcm/SoftMolWebServices/services/SoftGeneOrderingServiceSoap]]></value>
+                  <required>true</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+         <smxcomponent code="08_prepGI" dispnum="-1" type="xsl transformation">
+            <compprops>
+               <property code="xsl" dispnum="23" type="XML">
+                  <value><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: ADXL.IN.LABTEK.OE.WS.xml 11535 2022-03-22 13:20:59Z jzajdel $ -->
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nm="java:com.scc.smx.components.saxon.utils.NormalizedMessageUtil">
+    <xsl:template match="/">
+		<Message>
+			<Data>
+				<xsl:copy-of select="*"/>
+			</Data>
+			<xsl:if test="*:SubmitOrderResponse/*:SubmitOrderResult/*:RequestStatus/*:StatusNumber = '0'">
+				<StoredProcParams> <!-- TRELAddTest -->
+					<ordnm><xsl:value-of select="*:SubmitOrderResponse/*:SubmitOrderResult/*:UpdatedOrders/*:OrderNumber"/></ordnm>
+					<testID><xsl:value-of select="string(nm:getProperty('testId'))"/></testID>
+					<seqNr><xsl:value-of select="number(string(nm:getProperty('seqNr'))) + 1"/></seqNr>
+					<extension><xsl:value-of select="if (string(nm:getProperty('extension'))) then number(string(nm:getProperty('extension'))) + 1 else ''"/></extension>
+					<patId><xsl:value-of select="string(nm:getProperty('patId'))"/></patId>
+					<sampleId><xsl:value-of select="string(nm:getProperty('sampleId'))"/></sampleId>
+				</StoredProcParams>
+				<Out/>
+			</xsl:if>
+		</Message>
+    </xsl:template>
+</xsl:stylesheet>]]></value>
+                  <required>true</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+         <smxcomponent code="09_addGI" dispnum="-1" type="jdbc store">
+            <compprops>
+               <property code="driver" dispnum="9" type="STRING">
+                  <value>oracle.jdbc.OracleDriver</value>
+                  <required>false</required>
+               </property>
+               <property code="enrichMessage" dispnum="11" type="BOOLEAN">
+                  <value>true</value>
+                  <required>false</required>
+               </property>
+               <property code="faultManagement" dispnum="12" type="ENUM">
+                  <value>FAULT_JBI</value>
+                  <enums>
+                     <string>FAULT_JBI</string>
+                     <string>FAULT_FLOW</string>
+                  </enums>
+                  <required>false</required>
+               </property>
+               <property code="jndiDataSource" dispnum="18" type="STRING">
+                  <value>GIDS</value>
+                  <required>true</required>
+               </property>
+               <property code="matchParamRegexp" dispnum="20" type="STRING">
+                  <value>\$\w+</value>
+                  <required>false</required>
+               </property>
+               <property code="query" dispnum="24" type="STRING">
+                  <value><![CDATA[{call GI_TESTREL_PKG.TRELAddTest($ORDNUM, 'GIS', $TEST_ID, $SEQ, $EXT, $CORRID, $LIS, 'HIS.TEK', $HORD, $BILLNUM, 'HIS', 1, $err, $errCode)}]]></value>
+                  <required>true</required>
+               </property>
+               <property code="queryParams" dispnum="25" type="STRING">
+                  <value><![CDATA[list.count = 10
+  
+  list.1.class = com.scc.smx.components.jdbc.config.QueryParameterConfig
+  list.1.placeHolder = ORDNUM
+  list.1.inout = in
+  list.1.xpath = /Message/StoredProcParams/ordnm
+  list.1.paramType = java.lang.String
+  
+  list.2.class = com.scc.smx.components.jdbc.config.QueryParameterConfig
+  list.2.placeHolder = TEST_ID
+  list.2.inout = in
+  list.2.xpath = /Message/StoredProcParams/testID
+  list.2.paramType = java.lang.String
+  
+  list.3.class = com.scc.smx.components.jdbc.config.QueryParameterConfig
+  list.3.placeHolder = SEQ
+  list.3.inout = in
+  list.3.xpath = /Message/StoredProcParams/seqNr
+  list.3.paramType = java.lang.String
+ 
+  list.4.class = com.scc.smx.components.jdbc.config.QueryParameterConfig
+  list.4.placeHolder = EXT
+  list.4.inout = in
+  list.4.xpath = /Message/StoredProcParams/extension
+  list.4.paramType = java.lang.String
+  
+  list.5.class = com.scc.smx.components.jdbc.config.QueryParameterConfig
+  list.5.placeHolder = CORRID
+  list.5.inout = out
+  list.5.paramType = INTEGER
+  
+  list.6.class = com.scc.smx.components.jdbc.config.QueryParameterConfig
+  list.6.placeHolder = LIS
+  list.6.inout = out
+  list.6.paramType = INTEGER
+  
+  list.7.class = com.scc.smx.components.jdbc.config.QueryParameterConfig
+  list.7.placeHolder = HORD
+  list.7.inout = in
+  list.7.xpath = /Message/StoredProcParams/sampleId
+  list.7.paramType = java.lang.String
+  
+  list.8.class = com.scc.smx.components.jdbc.config.QueryParameterConfig
+  list.8.placeHolder = BILLNUM
+  list.8.inout = in
+  list.8.xpath = /Message/StoredProcParams/sampleId
+  list.8.paramType = java.lang.String
+  
+  list.9.class= com.scc.smx.components.jdbc.config.QueryParameterConfig
+  list.9.placeHolder = err
+  list.9.inout = out
+  list.9.paramType = VARCHAR
+  
+  list.10.class= com.scc.smx.components.jdbc.config.QueryParameterConfig
+  list.10.placeHolder = errCode
+  list.10.inout = out
+  list.10.paramType = INTEGER]]></value>
+                  <required>false</required>
+               </property>
+               <property code="rowsXmlEnvelope" dispnum="30" type="STRING">
+                  <value>rows</value>
+                  <required>false</required>
+               </property>
+               <property code="rowXmlEnvelope" dispnum="29" type="STRING">
+                  <value>row</value>
+                  <required>false</required>
+               </property>
+               <property code="xmlEnvelope" dispnum="34" type="STRING">
+                  <value>/Message/Out</value>
+                  <required>false</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+         <smxcomponent code="10_prepResponseData" dispnum="-1" type="xsl transformation">
+            <compprops>
+               <property code="xsl" dispnum="23" type="XML">
+                  <value><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: ADXL.IN.LABTEK.OE.WS.xml 11535 2022-03-22 13:20:59Z jzajdel $ -->
+<xsl:stylesheet version="2.0" exclude-result-prefixes="#all"
+	xmlns:nm="java:com.scc.smx.components.saxon.utils.NormalizedMessageUtil"
+	xmlns:ns4="http://www.softcomputer.com/SoftGeneOrderingService/"
+	xmlns:ns2="http://www.softcomputer.com/GeneOrderingService/"
+	xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:mom="http://mom.scc.com/">
+	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="no"/>
+	<xsl:variable name="nl"><xsl:text>
+</xsl:text></xsl:variable>
+	<xsl:template match="@*"/>
+	<xsl:template match="node()"><xsl:copy><xsl:apply-templates select="node()"/></xsl:copy></xsl:template>
+	<!-- <xsl:template match="/join"><xsl:apply-templates/></xsl:template> -->
+	<xsl:template match="/join">
+		<Message>
+			<Header>
+				<Instance>smx_01-wp129</Instance>
+				<Source>SMX</Source>
+			</Header>
+			<Data>
+				<item>
+					<timestamp><xsl:value-of select="current-dateTime()"/></timestamp>
+					<transactionId><xsl:value-of select="mom:publishMessageResponse/return/msgId"/></transactionId>
+					<patient>
+						<patientId><xsl:value-of select="if (nm:hasProperty('patId')) then string(nm:getProperty('patId')) else Message/Data/root/patient/patientId"/></patientId>
+					</patient>
+					<order>
+						<testId><xsl:value-of select="if (nm:hasProperty('testId')) then string(nm:getProperty('testId')) else Message/Data/root/order/testId"/></testId>
+						<sampleId><xsl:value-of select="if (nm:hasProperty('sampleId')) then string(nm:getProperty('sampleId')) else Message/Data/root/order/sampleId"/></sampleId>
+						<xsl:apply-templates select="Message/Out/CORRID"/>
+					</order>
+					<status>
+						<details><xsl:apply-templates/></details>
+					</status>
+				</item>
+			</Data>
+			<Attachments>
+				<Attachment Encoding="none" Location="element" Name="Payload"/>
+				<Attachment Encoding="none" Location="element" Name="httpData">
+					<xsl:choose>
+						<xsl:when test="drop or Message/ValidationResult/drop">400</xsl:when>
+						<xsl:when test="error">500</xsl:when>
+						<xsl:when test="SOAP-ENV:Fault">408</xsl:when>
+						<xsl:when test="Message/Out/CORRID/text()">201</xsl:when>
+						<xsl:when test="Message/Header/Action[not(. = 'newOrder')]">501</xsl:when>
+						<xsl:otherwise>500</xsl:otherwise>
+					</xsl:choose>
+				</Attachment>
+			</Attachments>
+		</Message>
+		<xsl:if test="not(nm:hasProperty('patId'))"><xsl:sequence select="nm:setPropertyStr('patId',Message/Data/root/patient/patientId/text())"/></xsl:if>
+		<xsl:if test="not(nm:hasProperty('testId'))"><xsl:sequence select="nm:setPropertyStr('testId',Message/Data/root/order/testId/text())"/></xsl:if>
+		<xsl:if test="not(nm:hasProperty('sampleId'))"><xsl:sequence select="nm:setPropertyStr('sampleId',Message/Data/root/order/sampleId/text())"/></xsl:if>
+		<xsl:if test="not(nm:hasProperty('mom.destMsgId'))"><xsl:sequence select="nm:setPropertyStr('mom.destMsgId',*:publishMessageResponse/return/msgId/text())"/></xsl:if>
+		<xsl:if test="not(nm:hasProperty('intConsole')) and Message/Data/HttpHeaders/header/@name = 'SCC-INT-CONSOLE'"><xsl:sequence select="nm:setPropertyStr('intConsole','true')"/></xsl:if>
+	</xsl:template>
+	<xsl:template match="mom:publishMessageResponse">
+		<xsl:sequence select="nm:setPropertyStr('mom.resultCode',return/resultCode/text())"/>
+		<xsl:sequence select="nm:setPropertyStr('mom.destMsgId',return/msgId/text())"/>
+	</xsl:template>
+	<xsl:template match="CORRID"><hisNumber><xsl:value-of select="."/></hisNumber></xsl:template>
+	<xsl:template match="Message/ValidationResult/drop" priority="2"><xsl:value-of select="concat('ERROR - VALIDATION: ',.)"/></xsl:template>
+	<xsl:template match="drop"><xsl:value-of select="concat('ERROR - DUPLICATED: test ',string(nm:getProperty('testId')),' is already ordered for given sample id ',string(nm:getProperty('sampleId')))"/></xsl:template>
+	<xsl:template match="SOAP-ENV:Fault">ERROR - TIMEOUT: GENE WS didn’t response</xsl:template>
+	<xsl:template match="error">ERROR - DATA: <xsl:value-of select="."/></xsl:template>
+	<xsl:template match="Message[Out/CORRID/text()]" priority="2">
+		<xsl:sequence select="nm:setPropertyStr('geneOrder',Data/ns2:SubmitOrderResponse/ns2:SubmitOrderResult/ns4:UpdatedOrders/ns4:OrderNumber/text())"/>
+		<xsl:value-of select="concat('OK: Sample  added, SCC number ',Data/ns2:SubmitOrderResponse/ns2:SubmitOrderResult/ns4:UpdatedOrders/ns4:OrderNumber,'.')"/>
+	</xsl:template>
+	<xsl:template match="Message[Data/*:SubmitOrderResponse and not(Data/*:SubmitOrderResponse/*:SubmitOrderResult/*:RequestStatus/*:StatusNumber = '0')]" priority="2">
+		<xsl:value-of select="concat('ERROR - DATA: ',string-join(Data/*:SubmitOrderResponse/*:SubmitOrderResult/*:RequestStatus/*:Problems[*:Critical = 'true']/*:Problem,$nl))"/>
+	</xsl:template>
+	<xsl:template match="Message[ValidationResult/drop]" priority="2"><xsl:value-of select="string-join(ValidationResult/drop,$nl)"/></xsl:template>
+	<xsl:template match="Message"/>
+</xsl:stylesheet>]]></value>
+                  <required>true</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+         <smxcomponent code="11_response2Json" dispnum="-1" type="marshaler">
+            <compprops>
+               <property code="marshalType" dispnum="2" type="ENUM">
+                  <value>XML2JSON</value>
+                  <enums>
+                     <string>XMLHL7v2_old</string>
+                     <string>HL7XML</string>
+                     <string>JSON2XML</string>
+                     <string>EXTRN</string>
+                     <string>XMLASTMv2LW</string>
+                     <string>XLS_CSV_TAB</string>
+                     <string>AGENT</string>
+                     <string>XLS_CSV</string>
+                     <string>DATABEAN</string>
+                     <string>NM_PROPS</string>
+                     <string>XMLHL7</string>
+                     <string>PLOTS</string>
+                     <string>2TSV</string>
+                     <string>GRAPH</string>
+                     <string>XMLASTMv2</string>
+                     <string>2CSV</string>
+                     <string>HL7XMLv2</string>
+                     <string>XML2JSON_XSD</string>
+                     <string>CSV</string>
+                     <string>XMLHL7v2</string>
+                     <string>GENERIC</string>
+                     <string>TSV</string>
+                     <string>MAIL_PROPS</string>
+                     <string>XML2JSON</string>
+                     <string>HTML2XML</string>
+                     <string>XMLHL7v2LW</string>
+                  </enums>
+                  <required>true</required>
+               </property>
+               <property code="properties" dispnum="3" type="PROPERTIES">
+                  <value><![CDATA[encoding:none
+messageTransformer.parser.attrMarker=
+messageTransformer.parser.ident=1
+messageTransformer.parser.useNullMarkerForEmpty=false]]></value>
+                  <required>false</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+         <smxcomponent code="12_prepExtResponse" dispnum="-1" type="xsl transformation">
+            <compprops>
+               <property code="xsl" dispnum="23" type="XML">
+                  <value><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: ADXL.IN.LABTEK.OE.WS.xml 11535 2022-03-22 13:20:59Z jzajdel $ -->
+<xsl:stylesheet version="2.0" exclude-result-prefixes="#all" xmlns:nm="java:com.scc.smx.components.saxon.utils.NormalizedMessageUtil" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="no"/>
+	<xsl:template match="node() | @*"><xsl:copy><xsl:apply-templates select="node() | @*"/></xsl:copy></xsl:template>
+	<xsl:template match="join"><xsl:apply-templates/></xsl:template>
+	<xsl:template match="Message/Header">
+		<xsl:copy>
+			<xsl:copy-of select="*"/>
+			<respondCode><xsl:value-of select="../Attachments/Attachment[@Name='httpData']"/></respondCode>
+		</xsl:copy>
+	</xsl:template>
+	<xsl:template match="Message/Data">
+		<xsl:copy>
+			<HttpData>
+				<HttpHeaders>
+					<xsl:if test="string(nm:getProperty('intConsole'))">
+						<header name="SCC-MRN"><xsl:attribute name="value" select="string(nm:getProperty('patId'))"/></header>
+						<header name="SCC-BILLING"><xsl:attribute name="value" select="string(nm:getProperty('patId'))"/></header>
+						<header name="SCC-ORDER"><xsl:attribute name="value" select="string(nm:getProperty('geneOrder'))"/></header>
+						<header name="SCC-MOM-ID"><xsl:attribute name="value" select="string(nm:getProperty('mom.destMsgId'))"/></header>
+					</xsl:if>
+					<header name="Content-Type" value="application/json"/>
+				</HttpHeaders>
+			</HttpData>
+		</xsl:copy>
+	</xsl:template>
+	<xsl:template match="Attachment[@Name='httpData']"/>
+	<xsl:template match="Message[Data/Parameters/@pathInfo = '/Info']" priority="2">
+		<Message>
+			<Header>
+				<xsl:copy-of select="Header/*" copy-namespaces="no"/>
+				<respondCode>200</respondCode>
+			</Header>
+			<Data>
+				<Parameters body="data" bodyPath="//Data/html"/>
+				<HttpData>
+					<HttpHeaders>
+						<header name="Content-Type" value="text/html"/>
+					</HttpHeaders>
+				</HttpData>
+&lt;!DOCTYPE html&gt;
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<title>Service info page</title>
+			<script>function showMethod(obj){
+var method=obj.dataset['method'];
+var element = document.getElementById(method+"_method");
+if(element.style.display=='none')element.style.display=null;
+else element.style.display='none';
+}</script>
+	</head>
+	<body>
+		<h2>List of available methods (with request and response structures):</h2>
+		<ul>
+			<li>
+				<h4><a href="#" data-method="newOrder" onClick="showMethod(this)">newOrder</a></h4>
+				<table border="1" id="newOrder_method" style="display:none">
+					<tr>
+						<td><b>Method</b></td>
+						<td><b>Request</b></td>
+						<td><b>Response</b></td>
+					</tr>
+					<tr>
+						<td>newOrder</td>
+						<td><pre>{
+	"timestamp":"dateTime",
+	"transcationId":"string",
+	"patient":{
+		"patientId":"string",
+		"DOB":"dateTime",
+		"sex":"string",
+		"ethnicity":"string"
+	},
+	"order":{
+		"testId":"string",
+		"sampleId":"string",
+		"collectedDT":"dateTime",
+		"receivedDT":"dateTime",
+		"specimenType":"string",
+		"rackId":"string",
+		"rackPos":"string",
+		"promptTests":[
+			{
+				"promptId":"string",
+				"promptValue":"string"
+			}
+		]
+	}
+}</pre>
+						</td>
+						<td><pre>{
+   "timestamp":"date time",
+   "transcationId":"string",
+   "patient":{
+      "patientId":"string"
+   },
+   "order":{
+      "testId":"string",
+      "sampleId":"string",
+      "hisNumber":"string"
+   },
+   "status":{
+      "details":"string"
+   }
+}</pre>
+						</td>
+					</tr>
+				</table>
+			</li>
+		</ul>
+	</body>
+</html>
+			</Data>
+		</Message>
+	</xsl:template>
+</xsl:stylesheet>]]></value>
+                  <required>true</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+			<!-- Tracking in MOM -->
+         <smxcomponent code="M01_preRequest" dispnum="-1" type="xsl transformation">
+            <compprops>
+               <property code="xsl" dispnum="23" type="XML">
+                  <value><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<xsl:stylesheet version="2.0" exclude-result-prefixes="#all"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:saxon="http://saxon.sf.net/"
+	xmlns:mom="http://mom.scc.com/">
+	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+	<xsl:template match="/">
+		<xsl:variable name="mom.extID" select="concat('LABTEK.OE:',substring(translate(xs:string(current-dateTime()),'-:T',''),1,12))"/>
+		<xsl:sequence xmlns:nm="java:com.scc.smx.components.saxon.utils.NormalizedMessageUtil" select="nm:setPropertyStr('mom.extID',$mom.extID)"/>
+		<xsl:element name="mom:publishMessage">
+			<xsl:element name="msg">
+				<xsl:element name="eventCode">WS_REQUEST</xsl:element>
+				<xsl:element name="eventType">DEFAULT</xsl:element>
+				<xsl:element name="senderCode">ESB</xsl:element>
+				<xsl:element name="NDestinations">
+					<xsl:element name="destCode">WS.ADXL.IN.LABTEK.OE</xsl:element>
+					<xsl:element name="resultCode">4</xsl:element>
+					<xsl:element name="extId"><xsl:value-of select="$mom.extID"/></xsl:element>
+				</xsl:element>
+				<xsl:variable name="msgText" select="saxon:base64Binary-to-string(xs:base64Binary(/Message/Attachments/Attachment), 'UTF8')"/>
+				<xsl:variable name="toRemove">'"</xsl:variable>
+				<xsl:variable name="jsonContent" select="tokenize(translate($msgText,$toRemove,''),'\{|\}|,')"/>
+				<xsl:element name="attributes">
+					<xsl:element name="name">TEST</xsl:element>
+					<xsl:element name="value"><xsl:value-of select="normalize-space(substring-after($jsonContent[contains(.,'testId')],':'))"/></xsl:element>
+				</xsl:element>
+				<xsl:variable name="patID" select="normalize-space(substring-after($jsonContent[contains(.,'patientId')],':'))"/>
+				<xsl:element name="attributes">
+					<xsl:element name="name">PAT_ID</xsl:element>
+					<xsl:element name="value"><xsl:value-of select="$patID"/></xsl:element>
+				</xsl:element>
+				<xsl:element name="attributes">
+					<xsl:element name="name">MRN</xsl:element>
+					<xsl:element name="value"><xsl:value-of select="$patID"/></xsl:element>
+				</xsl:element>
+				<xsl:variable name="sampleId" select="normalize-space(substring-after($jsonContent[contains(.,'sampleId')],':'))"/>
+				<xsl:element name="attributes">
+					<xsl:element name="name">BILLING</xsl:element>
+					<xsl:element name="value"><xsl:value-of select="$sampleId"/></xsl:element>
+				</xsl:element>
+				<xsl:element name="attributes">
+					<xsl:element name="name">SAMPLE_ID</xsl:element>
+					<xsl:element name="value"><xsl:value-of select="$sampleId"/></xsl:element>
+				</xsl:element>
+				<xsl:element name="attributes">
+					<xsl:element name="name">ORIGIN</xsl:element>
+					<xsl:element name="value"><xsl:value-of select="if (Message/Data/HttpHeaders/header/@name='SCC-INT-CONSOLE') then 'INT' else 'HIS.TEK'"/></xsl:element>
+				</xsl:element>
+				<xsl:element name="msgText">
+					<xsl:value-of select="$msgText"/>
+				</xsl:element>
+			</xsl:element>
+		</xsl:element>
+	</xsl:template>
+</xsl:stylesheet>]]></value>
+                  <required>true</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+         <smxcomponent code="M02_momClient" dispnum="-1" type="http client">
+            <compprops>
+               <property code="soap" dispnum="35" type="BOOLEAN">
+                  <value>true</value>
+                  <required>false</required>
+               </property>
+               <property code="soapVersion" dispnum="37" type="ENUM">
+                  <value>1.1</value>
+                  <enums>
+                     <string>1.1</string>
+                     <string>1.2</string>
+                  </enums>
+                  <required>false</required>
+               </property>
+               <property code="timeout" dispnum="41" type="INT">
+                  <value>90000</value>
+                  <required>false</required>
+               </property>
+               <property code="uri" dispnum="44" type="URL">
+                  <value><![CDATA[${env.SCC_URL_INT}/mom/SoftMomService/MessageService]]></value>
+                  <required>true</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+         <smxcomponent code="M03_prepResponse" dispnum="-1" type="xsl transformation">
+            <compprops>
+               <property code="xsl" dispnum="23" type="XML">
+                  <value><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<xsl:stylesheet version="2.0" exclude-result-prefixes="#all"
+xmlns:nm="java:com.scc.smx.components.saxon.utils.NormalizedMessageUtil"
+xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+xmlns:xs="http://www.w3.org/2001/XMLSchema"
+xmlns:mom="http://mom.scc.com/">
+	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+	<xsl:template match="/">
+		<xsl:choose>
+			<xsl:when test="string(nm:getProperty('mom.resultCode')) = '0'">
+				<xsl:element name="mom:acknowledge">
+					<xsl:element name="result" namespace="">
+						<xsl:element name="resultCode" namespace=""><xsl:value-of select="if (Message/Attachments/Attachment[@Name = 'httpData']/text() = '201') then '0' else '12'"/></xsl:element>
+						<xsl:element name="extId" namespace=""><xsl:value-of  select="nm:getProperty('mom.extID')"/></xsl:element>
+						<xsl:element name="destMsgId" namespace=""><xsl:value-of select="nm:getProperty('mom.destMsgId')"/></xsl:element>
+						<xsl:element name="messages" namespace="">
+							<xsl:element name="eventCode" namespace="">WS_RESPONSE</xsl:element>
+							<xsl:element name="senderCode" namespace="">ESB</xsl:element>
+							<xsl:element name="NDestinations" namespace="">
+								<xsl:element name="destCode">WS.ADXL.IN.LABTEK.OE</xsl:element>
+								<xsl:element name="resultCode" namespace="">0</xsl:element>
+							</xsl:element>
+							<xsl:element name="attributes">
+								<xsl:element name="name">HTTP_STATUS</xsl:element>
+								<xsl:element name="value"><xsl:value-of select="Message/Attachments/Attachment[@Name='httpData']/text()"/></xsl:element>
+							</xsl:element>
+							<xsl:if test="nm:hasProperty('geneOrder')">
+								<xsl:element name="attributes">
+									<xsl:element name="name">ORDER</xsl:element>
+									<xsl:element name="value"><xsl:value-of select="nm:getProperty('geneOrder')"/></xsl:element>
+								</xsl:element>
+								<xsl:element name="attributes">
+									<xsl:element name="name">CORRID</xsl:element>
+									<xsl:element name="value"><xsl:value-of select="Message/Data/item/order/hisNumber"/></xsl:element>
+								</xsl:element>
+							</xsl:if>
+							<xsl:element name="msgText" namespace="">
+								<xsl:value-of select="Message/Attachments/Attachment[@Name = 'Payload']"/>
+							</xsl:element>
+						</xsl:element>
+						<xsl:if test="not(Message/Attachments/Attachment[@Name = 'httpData']/text() = '201') and Message/Data/item/status/details/text()">
+							<xsl:element name="problems">
+								<xsl:element name="processingCode"><xsl:value-of select="substring-before(Message/Data/item/status/details,':')"/></xsl:element>
+								<xsl:element name="processingText"><xsl:value-of select="substring-after(Message/Data/item/status/details,':')"/></xsl:element>
+							</xsl:element>
+						</xsl:if>
+					</xsl:element>
+				</xsl:element>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:element name="momError"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+</xsl:stylesheet>]]></value>
+                  <required>true</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+         <smxcomponent code="M04_momClient" dispnum="-1" type="http client">
+            <compprops>
+               <property code="soap" dispnum="35" type="BOOLEAN">
+                  <value>true</value>
+                  <required>false</required>
+               </property>
+               <property code="soapVersion" dispnum="37" type="ENUM">
+                  <value>1.1</value>
+                  <enums>
+                     <string>1.1</string>
+                     <string>1.2</string>
+                  </enums>
+                  <required>false</required>
+               </property>
+               <property code="timeout" dispnum="41" type="INT">
+                  <value>90000</value>
+                  <required>false</required>
+               </property>
+               <property code="uri" dispnum="44" type="URL">
+                  <value><![CDATA[${env.SCC_URL_INT}/mom/SoftMomService/MessageService]]></value>
+                  <required>true</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+         <smxcomponent code="M05_terminator" dispnum="-1" type="terminator">
+            <compprops>
+               <property code="success" dispnum="2" type="BOOLEAN">
+                  <value>true</value>
+                  <required>true</required>
+               </property>
+            </compprops>
+         </smxcomponent>
+         <smxcomponent code="include_client" dispnum="-1" type="xsltLibs">
+			<compprops>
+				<property code="include" dispnum="-1" type="STRING">
+					<value>.*xml</value>
+					<required>false</required>
+				</property>
+				<property code="libdir" dispnum="-1" type="FILE">
+					<value>${env.DICT}/gui/eis/clients/${!DICT.CLIENT_ID}/xslt/${INSTANCE_CODE}/</value>
+					<required>false</required>
+				</property>
+				<property code="loadAsResources" dispnum="8" type="BOOLEAN">
+					<value>true</value>
+					<required>false</required>
+				</property>
+				<property code="resolveProps" dispnum="9" type="BOOLEAN">
+					<value>true</value>
+					<required>false</required>
+				</property>
+				<property code="toDir" dispnum="-1" type="STRING">
+					<value>client_resources</value>
+					<required>false</required>
+				</property>
+			</compprops>
+		 </smxcomponent>
+      </components>
+      <connections>
+         <connection from="00_httpReceiver"       to="01_json2xml"           trace="true"  fork="true"  error="false" filter="not(/Message/Data/Parameters/@pathInfo = '/Info') and not(/Message/Data/Parameters/parameter[@name = 'wsdl'])" />
+         <connection from="00_httpReceiver"       to="12_prepExtResponse"    trace="true"  fork="true"  error="false" filter="/Message/Data/Parameters/@pathInfo = '/Info' or /Message/Data/Parameters/parameter[@name = 'wsdl']" />
+         <connection from="01_json2xml"           to="02_validator"          trace="true"  fork="false" error="false" filter="" />
+         <connection from="01_json2xml"           to="10_prepResponseData"   trace="true"  fork="false" error="true"  filter="" />
+         <connection from="02_validator"          to="03_ext2canonical"      trace="true"  fork="false" error="false" filter="not(//drop)" />
+         <connection from="02_validator"          to="10_prepResponseData"   trace="true"  fork="false" error="false" filter="" />
+         <connection from="03_ext2canonical"      to="04_translation"        trace="true"  fork="false" error="false" filter="/Message/Header/Action = 'newOrder'" />
+         <connection from="03_ext2canonical"      to="05_checkGI"            trace="true"  fork="false" error="false" filter="/Message/Header/Action = 'newOrder'" />
+         <connection from="04_translation"        to="05_checkGI"            trace="true"  fork="false" error="false" filter="" />
+         <connection from="04_translation"        to="10_prepResponseData"   trace="true"  fork="false" error="true"  filter="" />
+         <connection from="05_checkGI"            to="06_canocnical2geneSrv" trace="true"  fork="false" error="false" filter="" />
+         <connection from="05_checkGI"            to="10_prepResponseData"   trace="true"  fork="false" error="true"  filter="" />
+         <connection from="06_canocnical2geneSrv" to="07_submitOrder"        trace="true"  fork="false" error="false" filter="/*:SubmitOrder" />
+         <connection from="06_canocnical2geneSrv" to="10_prepResponseData"   trace="true"  fork="false" error="false" filter="" />
+         <connection from="07_submitOrder"        to="08_prepGI"             trace="true"  fork="false" error="false" filter="" />
+         <connection from="07_submitOrder"        to="10_prepResponseData"   trace="true"  fork="false" error="true"  filter="" />
+         <connection from="08_prepGI"             to="09_addGI"              trace="true"  fork="false" error="false" filter="/Message/StoredProcParams" />
+         <connection from="08_prepGI"             to="10_prepResponseData"   trace="true"  fork="false" error="false" filter="" />
+         <connection from="09_addGI"              to="10_prepResponseData"   trace="true"  fork="false" error="false" filter="" />
+         <connection from="09_addGI"              to="10_prepResponseData"   trace="true"  fork="false" error="true"  filter="" />
+         <connection from="10_prepResponseData"   to="11_response2Json"      trace="true"  fork="true"  error="false" filter="" />
+         <connection from="11_response2Json"      to="12_prepExtResponse"    trace="true"  fork="false" error="false" filter="" />
+         <connection from="12_prepExtResponse"    to="00_httpReceiver"       trace="true"  fork="false" error="false" filter="" />
+			<!-- Tracking in MOM -->
+         <connection from="00_httpReceiver"       to="M01_preRequest"        trace="false" fork="true"  error="false" filter="not(/Message/Data/Parameters/@pathInfo = '/Info') and not(/Message/Data/Parameters/parameter[@name = 'wsdl'])" />
+         <connection from="M01_preRequest"        to="M02_momClient"         trace="false" fork="false" error="false" filter="" />
+         <connection from="M02_momClient"         to="10_prepResponseData"   trace="false" fork="false" error="false" filter="" />
+         <connection from="M02_momClient"         to="M05_terminator"        trace="false" fork="false" error="true"  filter="" />
+         <connection from="11_response2Json"      to="M03_prepResponse"      trace="false" fork="true"  error="false" filter="" />
+         <connection from="M03_prepResponse"      to="M04_momClient"         trace="false" fork="false" error="false" filter="not(/momError)" />
+         <connection from="M03_prepResponse"      to="M05_terminator"        trace="false" fork="false" error="false" filter="" />
+         <connection from="M04_momClient"         to="M05_terminator"        trace="false" fork="false" error="true"  filter="" />
+         <connection from="M04_momClient"         to="M05_terminator"        trace="false" fork="false" error="false" filter="" />
+      </connections>
+   </esbconf>
+   <usersetup>
+      <others>
+         <note/>
+         <esbstandalone>false</esbstandalone>
+         <commtype/>
+         <active>true</active>
+         <download accumulateldl="false" accumulateldlfor="0">
+            <redownload redownloadtype="P">
+               <firstredownload>30</firstredownload>
+               <maxredownloaddelay>600</maxredownloaddelay>
+               <nextredownloadratio>2</nextredownloadratio>
+               <resumeevery>0</resumeevery>
+               <numberofattempts>20</numberofattempts>
+            </redownload>
+         </download>
+         <qualifyby qualbydep="false" qualbyowks="false" qualbysite="false"/>
+         <scheduler days="0" logs="false"/>
+         <batch colcount="0" convertpos="false" fillalg="L" rowcount="0"/>
+         <qc maxattachtestperiod="0">
+            <autopostresults>false</autopostresults>
+            <askuserverifyresults>false</askuserverifyresults>
+            <autoverifyresultsautopost>false</autoverifyresultsautopost>
+            <qualifiedbyusedinstrument>false</qualifiedbyusedinstrument>
+            <orderwksasusedinstr>false</orderwksasusedinstr>
+            <intern>false</intern>
+            <excludeFromTqcInstrList>false</excludeFromTqcInstrList>
+            <useInterfaceCodeForTQCInstrumentList>false</useInterfaceCodeForTQCInstrumentList>
+            <patterns>
+               <ctid/>
+               <rtid/>
+               <numid/>
+               <numid2/>
+               <idpattern/>
+               <numpattern/>
+            </patterns>
+            <postUsedInstrument>false</postUsedInstrument>
+            <mappings/>
+         </qc>
+         <addtests>false</addtests>
+         <conttransidpattern>&lt;[BARCODE]&gt;</conttransidpattern>
+         <reqtransidpattern>&lt;TEST_CODE&gt;</reqtransidpattern>
+         <alternativeidpattern/>
+         <supressTestLdls>false</supressTestLdls>
+         <postUnknowBarcodes>false</postUnknowBarcodes>
+         <skipLdlLink>false</skipLdlLink>
+         <labautopost flags="NNNNNNNNNNNNNNNNNNNNNNNNN" timeframe="0"/>
+         <trackmode/>
+         <trackqueryact/>
+         <trackquerycom/>
+         <trackresultact/>
+         <trackresultcom/>
+      </others>
+      <parameters>
+         <parameter code="_IS_ACTIVE_CONFIGURATION"  comment="Enable/disable starting (allowed values: true,false)" defval="true" export="false" hidden="false" overwrite="false"/>
+         <parameter code="authenticationEnabled" defval="true" comment="Controls if authentication is enabled, connected with 'sccsec.active' ESB property" export="true" hidden="false" overwrite="false" grp="Connection settings"/>
+         <parameter code="serviceName" comment="Name of the URL - endpoint " defval="scc/services/client" export="true" hidden="false" overwrite="false" grp="Connection settings"/>
+         <parameter code="serviceMethod" comment="Name of method (POST,GET,DELETE)" defval="POST" export="true" hidden="false" overwrite="false" grp="Connection settings"/>
+         <parameter code="hisID" defval="HIS1" export="true" hidden="false" overwrite="false" grp="Global settings"/>
+         <parameter code="useTS" defval="false" export="true" hidden="false" overwrite="false" grp="Global settings"/>
+         <parameter code="rackIdFieldCode" defval="NOT_DEFINED" export="true" hidden="false" overwrite="false" comment="UDF id for transfer rack ID – specimen level UDF"/>
+         <parameter code="rackPosFieldCode" defval="NOT_DEFINED" export="true" hidden="false" overwrite="false" comment="UDF id position in the transfer rack– specimen level UDF"/>
+         <parameter code="collectionTechnician" defval="SCC" export="true" hidden="false" overwrite="false" comment="User to fill specimen collectedBY"/>
+         <parameter code="receiveTechnician" defval="SCC" export="true" hidden="false" overwrite="false" comment="User to fill tube receivedBY"/>
+         <parameter code="defaultDoctor" defval="-" export="true" hidden="false" overwrite="false" comment="Default doctor code"/>
+         <parameter code="defaultClinic" defval="-" export="true" hidden="false" overwrite="false" comment="Default clinic code"/>
+         <parameter code="defaultSex" defval="U" export="true" hidden="false" overwrite="false" comment="Default patient sex"/>
+      </parameters>
+      <qualifications/>
+      <transvalues/>
+      <resadjrules/>
+      <routecodes/>
+      <misctables/>
+   </usersetup>
+</model>

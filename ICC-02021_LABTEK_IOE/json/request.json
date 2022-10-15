@@ -1,0 +1,25 @@
+{
+	"timestamp": "dateTime",
+	"transcationId": "string",
+	"patient": {
+		"patientId": "string",
+		"DOB": "dateTime",
+		"sex": "string",
+		"ethnicity": "string"
+	},
+	"order": {
+		"testId": "string",
+		"sampleId": "string",
+		"collectedDT": "dateTime",
+		"receivedDT": "dateTime",
+		"specimenType": "string",
+		"rackId": "string",
+		"rackPos": "string",
+		"promptTests": [
+			{
+				"promptId": "string",
+				"promptValue": "string"
+			}
+		]
+	}
+}

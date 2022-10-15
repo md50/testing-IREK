@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: ADXL.OUT.LABTEK.NEWTEST.WS.dpl 11385 2022-02-28 08:34:32Z rafalpa $ -->
+<!--  
+	outbound Web Service for new test to LabTek system (JSON REST WS interface) based on TEMPLATE.OUT.WS.GENERIC template 
+-->
+<dpl name="ADXL.OUT.LABTEK.NEWTEST.WS">
+	<items>
+		<inst code="ADXL.OUT.LABTEK.NEWTEST.WS" name="ADXL.OUT.LABTEK.NEWTEST.WS" model="ADXL.OUT.LABTEK.NEWTEST.WS" category="OUTBOUND" esb="FARM" tz="US/Central" active="true" run="true" modifoverwrite="true" condition="" mu2param="">
+			<todo/>
+			<parameters>
+				<param code="externalURL" hidden="false" update="true" value="${!DICT.HOST_WS}/AddTest"/>
+				<param code="outboundProtocolType" hidden="false" update="true" value="RestClient"/>
+				<param code="serviceName" hidden="false" update="true" value="ADXL.OUT.LABTEK.NEWTEST.WS"/>
+				<param code="useSoap" hidden="false" update="true" value="false"/>
+				<param code="outboundMarshalerProperties" hidden="false" update="true" value="contentType=application/json&#10;restRespond=true&#10;locationURIXPath=Message/@resource&#10;methodXPath=Message/@method&#10;headersExpr=Authorization=xpath://Header/Authorization"/>
+				<param code="inboundMarshalerProperties" hidden="false" update="true" value="restRespond=true&#10;streamMarshaler.populateHttpRespondInfoToNm=true&#10;streamMarshaler.messageTransformer.parser.fixBadNames=true"/>
+				<param code="customRequestDirectory" hidden="false" update="true" value="${env.DICT}/gui/eis/clients/${!DICT.CLIENT_ID}/xslt/${INSTANCE_CODE}/prepNewTestRequest.xslt"/>
+				<param code="customResponseDirectory" hidden="false" update="true" value="${env.DICT}/gui/eis/clients/${!DICT.CLIENT_ID}/xslt/cmnPrepResponse.xslt"/>
+				<param code="activePreStoredProcedure" hidden="false" update="true" value="true"/>
+				<param code="preStoredProcedureQuery" hidden="false" update="true" value="call GI_TESTREL_PKG.TRELGetComp_ForSending($GI_TREL_SCCTESTINFO_OBJ, $GI_TREL_HISTESTINFO_OBJ, $input, $dt, $GI_TREL_COMPINFO_TAB, 1, $err, $errCode, $getAll)"/>
+				<param code="preStoredProcedureParams" hidden="false" update="true" value="list.count = 8&#10;&#10;list.1.class = com.scc.smx.components.jdbc.config.QueryParameterConfig&#10;list.1.placeHolder = GI_TREL_SCCTESTINFO_OBJ&#10;list.1.inout = inout&#10;list.1.xpath = /Message/StoredProcParams/GI_TREL_SCCTESTINFO_OBJ&#10;list.1.paramType = oracle.sql.STRUCT, STRUCT&#10;&#10;list.2.class= com.scc.smx.components.jdbc.config.QueryParameterConfig&#10;list.2.placeHolder = GI_TREL_HISTESTINFO_OBJ&#10;list.2.inout = inout&#10;list.2.xpath = /Message/StoredProcParams/GI_TREL_HISTESTINFO_OBJ&#10;list.2.paramType = oracle.sql.STRUCT, STRUCT&#10;list.2.nullable = true&#10;&#10;list.3.class= com.scc.smx.components.jdbc.config.QueryParameterConfig&#10;list.3.placeHolder = input&#10;list.3.inout = in&#10;list.3.paramName=GI_TREL_COMPINFO_TAB&#10;list.3.xpath = /Message/StoredProcParams/GI_TREL_COMPINFO_TAB/GI_TREL_COMPINFO_OBJ&#10;list.3.paramType = oracle.sql.ARRAY&#10;&#10;list.4.class= com.scc.smx.components.jdbc.config.QueryParameterConfig&#10;list.4.placeHolder = dt&#10;list.4.inout = in&#10;list.4.xpath = /Message/StoredProcParams/Date&#10;list.4.paramType = java.sql.Date&#10;&#10;list.5.class= com.scc.smx.components.jdbc.config.QueryParameterConfig&#10;list.5.placeHolder = GI_TREL_COMPINFO_TAB&#10;list.5.inout = out&#10;list.5.paramType = ARRAY&#10;&#10;list.6.class= com.scc.smx.components.jdbc.config.QueryParameterConfig&#10;list.6.placeHolder = err&#10;list.6.inout = out&#10;list.6.paramType = VARCHAR&#10;&#10;list.7.class= com.scc.smx.components.jdbc.config.QueryParameterConfig&#10;list.7.placeHolder = errCode&#10;list.7.inout = out&#10;list.7.paramType = ORA.NUMBER&#10;&#10;list.8.class= com.scc.smx.components.jdbc.config.QueryParameterConfig&#10;list.8.placeHolder = getAll&#10;list.8.inout = in&#10;list.8.xpath = /Message/StoredProcParams/GET_ALL&#10;list.8.paramType = java.lang.Integer"/>
+			</parameters>
+		</inst>
+	</items>
+</dpl>

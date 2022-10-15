@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!-- $Id: ICC-02021_Info.xml 10556 2021-09-22 15:04:13Z artur $-->
+<ICCInfo revision="$Revision: 10556 $">
+	<Client>ADXL</Client>
+	<ImplTask>ADXL-00288</ImplTask>
+	<ICCTask>ICC-02021</ICCTask>
+	<IntType>IOE</IntType>
+	<IntName>[LabTek] OEin [Molecular/BioChem] Interface</IntName>
+	<Gaps>
+		<Gap>DA-EIS-GAP-619IT</Gap>
+	</Gaps>
+</ICCInfo>

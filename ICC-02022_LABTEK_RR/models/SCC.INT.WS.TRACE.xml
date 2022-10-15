@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: SCC.INT.WS.TRACE.xml 11165 2022-01-26 22:19:14Z rafalpa $-->
+<model>
+  <modelid>SCC.INT.WS.TRACE</modelid>
+  <version>2.$Rev: 11165 $.1</version>
+  <dmiversion>4.1.10.0605</dmiversion>
+  <category />
+  <modeltype>I</modeltype>
+  <changedt>$LastChangedDate: 2022-01-26 23:19:14 +0100 (śr., 26 sty 2022) $</changedt>
+  <control>
+    <currentht />
+    <parentht />
+    <dlsversion>1</dlsversion>
+  </control>
+  <config>
+    <propertyconversion>false</propertyconversion>
+    <download enabled="false">
+      <groupidpattern />
+      <queueidpattern />
+      <downloadnewldlonly>true</downloadnewldlonly>
+      <downloadcontainer>false</downloadcontainer>
+      <downloadqueues>false</downloadqueues>
+      <sendldlpropertiesonly>false</sendldlpropertiesonly>
+      <calculateroutingcodes>false</calculateroutingcodes>
+      <downloadack>false</downloadack>
+      <resumequeueafterupdate>false</resumequeueafterupdate>
+      <supportupdate>D</supportupdate>
+    </download>
+    <translations />
+    <resadjs />
+    <misctables />
+  </config>
+  <esbconf code="SCC.INT.WS.TRACE">
+    <components>
+      <smxcomponent code="00_httpServerMom" type="http server" dispnum="-1">
+        <compprops>
+          <property code="service" type="STRING" dispnum="17">
+            <value><![CDATA[${serviceName}]]></value>
+            <enums />
+            <required>true</required>
+          </property>
+          <property code="soap" type="BOOLEAN" dispnum="18">
+            <value>true</value>
+            <enums />
+            <required>false</required>
+          </property>
+          <property code="soapVersion" type="ENUM" dispnum="20">
+            <value>1.1</value>
+            <enums>
+              <string>1.1</string>
+              <string>1.2</string>
+            </enums>
+            <required>false</required>
+          </property>
+          <property code="wsdl" type="XML" dispnum="23">
+            <value><![CDATA[<definitions name="MessageReceiverService" targetNamespace="http://mom.scc.com/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://mom.scc.com/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <types>
+    <xs:schema targetNamespace="http://mom.scc.com/" version="1.0" xmlns:tns="http://mom.scc.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="onMessage" type="tns:onMessage" />
+      <xs:element name="onMessageResponse" type="tns:onMessageResponse" />
+      <xs:complexType name="onMessage">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="msg" type="tns:destinationMessage" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="destinationMessage">
+        <xs:complexContent>
+          <xs:extension base="tns:message">
+            <xs:sequence>
+              <xs:element name="destMsgId" type="xs:long" />
+              <xs:element minOccurs="0" name="sendDate" type="xs:dateTime" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="message">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="attributes" nillable="true" type="tns:attribute" />
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="destinations" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="eventCode" type="xs:string" />
+          <xs:element minOccurs="0" name="eventType" type="xs:string" />
+          <xs:element minOccurs="0" name="groupCode" type="xs:string" />
+          <xs:element minOccurs="0" name="msgText" type="xs:string" />
+          <xs:element minOccurs="0" name="senderCode" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="attribute">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="name" type="xs:string" />
+          <xs:element minOccurs="0" name="value" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="onMessageResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:deliveryResult" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="deliveryResult">
+        <xs:complexContent>
+          <xs:extension base="tns:result">
+            <xs:sequence>
+              <xs:element name="destMsgId" type="xs:long" />
+              <xs:element minOccurs="0" name="extId" type="xs:string" />
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="messages" nillable="true" type="tns:message" />
+              <xs:element minOccurs="0" name="processingCode" type="xs:string" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="result">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="details" type="xs:string" />
+          <xs:element name="resultCode" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </types>
+  <message name="MessageReceiverService_onMessageResponse">
+    <part element="tns:onMessageResponse" name="onMessageResponse">
+    </part>
+  </message>
+  <message name="MessageReceiverService_onMessage">
+    <part element="tns:onMessage" name="onMessage">
+    </part>
+  </message>
+  <portType name="MessageReceiverService">
+    <operation name="onMessage" parameterOrder="onMessage">
+      <input message="tns:MessageReceiverService_onMessage">
+      </input>
+      <output message="tns:MessageReceiverService_onMessageResponse">
+      </output>
+    </operation>
+  </portType>
+  <binding name="MessageReceiverServiceBinding" type="tns:MessageReceiverService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="onMessage">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="SCC.INT.WS.TRACE">
+    <port binding="tns:MessageReceiverServiceBinding" name="MessageReceiverServicePort">
+      <soap:address location="http://www.softcomputer.com/MessageReceiverService" />
+    </port>
+  </service>
+</definitions>]]></value>
+            <enums />
+            <required>false</required>
+          </property>
+        </compprops>
+      </smxcomponent>
+      <smxcomponent code="01_xslPrepareRequest" type="xsl transformation" dispnum="-1">
+        <compprops>
+          <property code="xsl" type="XML" dispnum="13">
+            <value><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:ns="http://com.scc.smx.esbservice/1.0">
+	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+	<!-- Parameters -->
+	<xsl:param name="traceType">${traceType}</xsl:param>
+	<xsl:param name="saName">${saName}</xsl:param>
+	<xsl:param name="serviceName">${serviceName}</xsl:param>
+	<xsl:param name="traceDaysNumber">${traceDaysNumber}</xsl:param>
+	<xsl:param name="traceQueryIdentificator">${traceQueryIdentificator}</xsl:param>
+	<xsl:param name="source">${source}</xsl:param>
+	<xsl:param name="destination">${destination}</xsl:param>
+	<!-- Variables -->
+	<xsl:variable name="toDateTime" select="format-dateTime(current-dateTime(), '[M01]/[D01]/[Y01]-[H01]:[m01]:[s01]')"/>
+	<xsl:variable name="fromDT">
+		<xsl:sequence select="current-dateTime()-$traceDaysNumber*xs:dayTimeDuration('P1D')"/>
+	</xsl:variable>
+	<xsl:variable name="fromDateTime" select="format-dateTime($fromDT, '[M01]/[D01]/[Y01]-[H01]:[m01]:[s01]')"/>
+	<!--The main match.-->
+	<xsl:template match="/">
+		<ns:getTraces>
+			<traceQuery>
+				<xsl:if test="$traceQueryIdentificator='MUTI'">
+					<foreign_key>
+						<xsl:value-of select="//attributes[name='MUTI']/value"/>
+					</foreign_key>
+				</xsl:if>
+				<xsl:if test="$traceQueryIdentificator='PROCESS_ID'">
+					<process_id>
+						<xsl:value-of select="//attributes[name='PROCESS_ID']/value"/>
+					</process_id>
+				</xsl:if>
+				<all_rows>true</all_rows>
+				<sa_name>
+					<xsl:value-of select="if ($saName='-') then substring-before($serviceName,'.TRACE') else $saName"/>
+				</sa_name>
+				<trace_type>
+					<xsl:value-of select="$traceType"/>
+				</trace_type>
+				<from_date>
+					<xsl:value-of select="$fromDateTime"/>
+				</from_date>
+				<to_date>
+					<xsl:value-of select="$toDateTime"/>
+				</to_date>
+				<xsl:if test="not($source='-') and string($source)">
+					<source><xsl:value-of select="$source"/></source>
+				</xsl:if>
+				<xsl:if test="not($destination='-') and string($destination)">
+					<destination><xsl:value-of select="$destination"/></destination>
+				</xsl:if>
+			</traceQuery>
+		</ns:getTraces>
+	</xsl:template>
+</xsl:stylesheet>
+]]></value>
+            <enums />
+            <required>true</required>
+          </property>
+        </compprops>
+      </smxcomponent>
+      <smxcomponent code="02_httpGetTrace" type="http client" dispnum="0">
+        <compprops>
+          <property code="soap" type="B" dispnum="0">
+            <value>true</value>
+            <enums />
+            <required>false</required>
+          </property>
+          <property code="soapAction" type="S" dispnum="0">
+            <value><![CDATA[${env.SCC_URL_INT}/smx/ws/EsbService/getTraces]]></value>
+            <enums />
+            <required>false</required>
+          </property>
+          <property code="soapVersion" type="E" dispnum="0">
+            <value>1.1</value>
+            <enums>
+              <string>1.1</string>
+              <string>1.2</string>
+            </enums>
+            <required>false</required>
+          </property>
+          <property code="uri" type="S" dispnum="0">
+            <value><![CDATA[${env.SCC_URL_INT}/smx/ws/EsbService]]></value>
+            <enums />
+            <required>true</required>
+          </property>
+        </compprops>
+      </smxcomponent>
+      <smxcomponent code="03_xslExtractMessage" type="xsl transformation" dispnum="-1">
+        <compprops>
+			<property code="defaultXslFile" type="FILE" dispnum="-1">
+				<value>${env.DICT}/gui/eis/clients/${!DICT.CLIENT_ID}/xslt/SCC.INT.WS.TRACE/extractOutboundTraces.xslt</value>
+				<enums/>
+				<required>false</required>
+			</property>
+			<property code="xslFile" type="S" dispnum="0">
+				<value><![CDATA[${customExtractDirectory}]]></value>
+				<enums/>
+				<required>true</required>
+			</property>
+			<property code="optional" type="B" dispnum="0">
+				<value>true</value>
+				<enums/>
+				<required>false</required>
+			</property>
+        </compprops>
+      </smxcomponent>
+      <smxcomponent code="04_xslCustom" type="xsl transformation" dispnum="0">
+				<compprops>
+					<property code="defaultXslFile" type="FILE" dispnum="-1">
+						<value>${env.DICT}/gui/eis/xslt/xslMsgCopy.xsl</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="xslFile" type="S" dispnum="0">
+						<value>${env.DICT}/gui/eis/clients/${!DICT.CLIENT_ID}/xslt/${INSTANCE_CODE}/custom.xslt</value>
+						<enums/>
+						<required>true</required>
+					</property>
+					<property code="optional" type="B" dispnum="0">
+						<value>true</value>
+						<enums/>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+      <smxcomponent code="05_xslBuildResponse2MOM" type="xsl transformation" dispnum="-1">
+        <compprops>
+          <property code="defaultXslFile" type="FILE" dispnum="-1">
+				<value>${env.DICT}/gui/eis/clients/${!DICT.CLIENT_ID}/xslt/SCC.INT.WS.TRACE/outboundResponse2MOM.xslt</value>
+				<enums/>
+				<required>false</required>
+			</property>
+			<property code="xslFile" type="S" dispnum="0">
+				<value><![CDATA[${customResponseDirectory}]]></value>
+				<enums/>
+				<required>true</required>
+			</property>
+			<property code="optional" type="B" dispnum="0">
+				<value>true</value>
+				<enums/>
+				<required>false</required>
+			</property>
+        </compprops>
+      </smxcomponent>
+    </components>
+    <connections>
+	  <connection from="00_httpServerMom" to="01_xslPrepareRequest" trace="true" fork="false" error="false" order="1" connectionId="1"/>
+      <connection from="01_xslPrepareRequest" to="02_httpGetTrace" trace="true" fork="false" error="false" order="2" connectionId="2"/>
+      <connection from="02_httpGetTrace" to="03_xslExtractMessage" trace="true" fork="false" error="false" order="3" connectionId="3"/>
+      <connection from="03_xslExtractMessage" to="04_xslCustom" trace="true" fork="false" error="false" order="4" connectionId="4"/>
+      <connection from="04_xslCustom" to="05_xslBuildResponse2MOM" trace="true" fork="false" error="false" order="5" connectionId="5"/>
+      <connection from="05_xslBuildResponse2MOM" to="00_httpServerMom" trace="true" fork="false" error="false" order="5" connectionId="6"/>
+    </connections>
+  </esbconf>
+  <usersetup>
+    <others>
+      <note />
+      <esbstandalone>false</esbstandalone>
+      <active>true</active>
+      <download accumulateldl="false" accumulateldlfor="0">
+        <redownload redownloadtype="P">
+          <firstredownload>30</firstredownload>
+          <maxredownloaddelay>600</maxredownloaddelay>
+          <nextredownloadratio>2</nextredownloadratio>
+          <resumeevery>0</resumeevery>
+          <numberofattempts>20</numberofattempts>
+        </redownload>
+      </download>
+      <qualifyby qualbysite="false" qualbydep="false" qualbyowks="false" />
+      <scheduler days="0" logs="false" />
+      <batch convertpos="false" fillalg="L" rowcount="0" colcount="0" />
+      <qc maxattachtestperiod="0">
+        <autopostresults>false</autopostresults>
+        <askuserverifyresults>false</askuserverifyresults>
+        <autoverifyresultsautopost>false</autoverifyresultsautopost>
+        <qualifiedbyusedinstrument>false</qualifiedbyusedinstrument>
+        <orderwksasusedinstr>false</orderwksasusedinstr>
+        <intern>false</intern>
+        <excludeFromTqcInstrList>false</excludeFromTqcInstrList>
+        <patterns>
+          <ctid />
+          <rtid />
+          <numid />
+          <numid2 />
+          <idpattern />
+          <numpattern />
+        </patterns>
+        <mappings />
+      </qc>
+      <addtests>false</addtests>
+      <conttransidpattern>&lt;[BARCODE]&gt;</conttransidpattern>
+      <reqtransidpattern>&lt;TEST_CODE&gt;</reqtransidpattern>
+      <supressTestLdls>false</supressTestLdls>
+      <postUnknowBarcodes>false</postUnknowBarcodes>
+      <skipLdlLink>false</skipLdlLink>
+    </others>
+    <parameters>
+		 <parameter code="serviceName" defval="${INSTANCE_CODE}" export="true" hidden="false" overwrite="false" />
+		 <parameter code="saName" defval="-" export="true" hidden="false" comment="Interface SA name for which traces has to be read. Default is SA name substring before .TRACE" overwrite="false" />
+		 <parameter code="traceType" defval="COMMUNICATION" export="true" hidden="false" comment="Type of traces to be gathered from Rest WS. Possible values: SA,COMMUNICATION" overwrite="false" />
+		 <parameter code="traceQueryIdentificator" defval="MUTI" export="true" hidden="false" comment="Identificator (attribute send by MOM) to be used in traceQuery. Possible values: MUTI,PROCESS_ID" overwrite="false" />
+		 <parameter code="traceDaysNumber" defval="5" export="true" hidden="false" comment="Number of days back from current day to be traces gathered from ESB." overwrite="false" />
+		 <parameter code="source" defval="-" export="true" hidden="false" comment="List of comma separated components 'From' trace should be gathered." overwrite="false" />
+		 <parameter code="destination" defval="-" export="true" hidden="false" comment="List of comma separated components 'To' trace should be gathered." overwrite="false" />
+		 <parameter code="customExtractDirectory" defval="-" comment="Directory where is placed xslt stylesheet file used to extract traces." export="true" hidden="false" overwrite="false"/>
+		 <parameter code="customDirectory" defval="-" comment="Directory where is placed additional xslt stylesheet file used to work on extracted traces." export="true" hidden="false" overwrite="false"/>
+		 <parameter code="customResponseDirectory" defval="-" comment="Directory where is placed xslt stylesheet file used to publish traces on MOM." export="true" hidden="false"/>
+	</parameters>
+    <qualifications />
+    <transvalues />
+    <resadjrules />
+    <routecodes />
+    <misctables />
+  </usersetup>
+  <graphstate/>
+</model>

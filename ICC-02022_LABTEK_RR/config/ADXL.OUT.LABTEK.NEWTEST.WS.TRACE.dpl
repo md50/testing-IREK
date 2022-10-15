@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: ADXL.OUT.LABTEK.NEWTEST.WS.TRACE.dpl 11068 2022-01-11 22:45:30Z rafalpa $ -->
+<!--  
+	JSON request and response to MOM viewer
+-->
+<dpl name="ADXL.OUT.LABTEK.NEWTEST.WS.TRACE">
+	<items>
+		<inst code="ADXL.OUT.LABTEK.NEWTEST.WS.TRACE" name="ADXL.OUT.LABTEK.NEWTEST.WS.TRACE" model="SCC.INT.WS.TRACE" category="OUTBOUND_TRACE" esb="FARM" tz="US/Central" active="true" run="true" modifoverwrite="true" condition="" mu2param="">
+			<parameters/>				
+		</inst>
+	</items>
+</dpl>

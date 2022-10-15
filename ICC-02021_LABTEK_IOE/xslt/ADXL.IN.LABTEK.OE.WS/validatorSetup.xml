@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: validatorSetup.xml 10865 2021-11-26 08:57:27Z jzajdel $ -->
+<validators>
+
+	<validator id="patient_id">
+		<eventFields>
+			<field xpath="Parameters/@pathInfo">
+				<value>/newOrder</value>
+			</field>
+		</eventFields>
+		<field xpath="patient/patientId"/>
+		<actionSet>
+			<action id="reject"/>
+			<processingCode>VALIDATION ERROR</processingCode>
+			<resultCode>SKIP_FAILED</resultCode>
+			<descriptionText>Missing patientId</descriptionText>
+		</actionSet>
+	</validator>
+	
+	<validator id="test_id">
+		<eventFields>
+			<field xpath="Parameters/@pathInfo">
+				<value>/newOrder</value>
+			</field>
+		</eventFields>
+		<field xpath="order/testId"/>
+		<actionSet>
+			<action id="reject"/>
+			<processingCode>VALIDATION ERROR</processingCode>
+			<resultCode>SKIP_FAILED</resultCode>
+			<descriptionText>Missing testId</descriptionText>
+		</actionSet>
+	</validator>
+	
+	<validator id="sample_id">
+		<eventFields>
+			<field xpath="Parameters/@pathInfo">
+				<value>/newOrder</value>
+			</field>
+		</eventFields>
+		<field xpath="order/sampleId"/>
+		<actionSet>
+			<action id="reject"/>
+			<processingCode>VALIDATION ERROR</processingCode>
+			<resultCode>SKIP_FAILED</resultCode>
+			<descriptionText>Missing sampleId</descriptionText>
+		</actionSet>
+	</validator>
+	
+	<validator id="specimen_type">
+		<eventFields>
+			<field xpath="Parameters/@pathInfo">
+				<value>/newOrder</value>
+			</field>
+		</eventFields>
+		<field xpath="order/specimenType"/>
+		<actionSet>
+			<action id="reject"/>
+			<processingCode>VALIDATION ERROR</processingCode>
+			<resultCode>SKIP_FAILED</resultCode>
+			<descriptionText>Missing specimenType</descriptionText>
+		</actionSet>
+	</validator>
+	
+	<validator id="collect_dt">
+		<eventFields>
+			<field xpath="Parameters/@pathInfo">
+				<value>/newOrder</value>
+			</field>
+		</eventFields>
+		<field xpath="order/collectedDT"/>
+		<actionSet>
+			<action id="reject"/>
+			<processingCode>VALIDATION ERROR</processingCode>
+			<resultCode>SKIP_FAILED</resultCode>
+			<descriptionText>Missing collectedDT</descriptionText>
+		</actionSet>
+	</validator>
+	
+	<validator id="receive_dt">
+		<eventFields>
+			<field xpath="Parameters/@pathInfo">
+				<value>/newOrder</value>
+			</field>
+		</eventFields>
+		<field xpath="order/receivedDT"/>
+		<actionSet>
+			<action id="reject"/>
+			<processingCode>VALIDATION ERROR</processingCode>
+			<resultCode>SKIP_FAILED</resultCode>
+			<descriptionText>Missing receivedDT</descriptionText>
+		</actionSet>
+	</validator>
+	
+</validators>

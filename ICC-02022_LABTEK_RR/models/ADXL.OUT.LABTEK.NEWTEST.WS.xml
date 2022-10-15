@@ -1,0 +1,1068 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: ADXL.OUT.LABTEK.NEWTEST.WS.xml 10916 2021-12-07 07:45:49Z rafalpa $-->
+<model>
+	<modelid>ADXL.OUT.LABTEK.NEWTEST.WS</modelid>
+	<version>2.$Rev: 10916 $.528</version>
+	<dmiversion>3.5.0.0515</dmiversion>
+	<category>INTEGRATION</category>
+	<modeltype>I</modeltype>
+	<changedt>$LastChangedDate: 2021-12-07 08:45:49 +0100 (Tue, 07 Dec 2021) $</changedt>
+	<instalnote/>
+	<config>
+		<propertyconversion>false</propertyconversion>
+		<download enabled="false">
+			<groupidpattern/>
+			<queueidpattern/>
+			<downloadnewldlonly>false</downloadnewldlonly>
+			<downloadcontainer>false</downloadcontainer>
+			<downloadqueues>false</downloadqueues>
+			<sendldlpropertiesonly>false</sendldlpropertiesonly>
+			<calculateroutingcodes>false</calculateroutingcodes>
+			<downloadack>false</downloadack>
+			<resumequeueafterupdate>false</resumequeueafterupdate>
+			<supportupdate>D</supportupdate>
+		</download>
+		<translations/>
+		<resadjs/>
+		<misctables>
+			<table name="Custom_Parameters" forcesynch="false" hidden="false" deprecated="false" autoSize="false">
+				<header>
+					<col id="Code" caption="Code" unique="false" deprecated="false" grouping="false" width="100" color="" displayPosition="0" />
+					<col id="Value" caption="Value" unique="false" deprecated="false" grouping="false" width="100" color="" displayPosition="1" />
+					<col id="Comment" caption="Comment" unique="false" deprecated="false" grouping="false" width="100" color="" displayPosition="2" />
+				</header>
+			</table>
+		</misctables>
+	</config>
+	<esbconf code="ADXL.OUT.LABTEK.NEWTEST.WS" name="ADXL.OUT.LABTEK.NEWTEST.WS" version="2013-04-12.202353.3">
+		<components>
+			<smxcomponent code="00_http server" type="http server" dispnum="0">
+				<compprops>
+					<property code="service" type="S" dispnum="0">
+						<value><![CDATA[${serviceName}]]></value>
+						<enums/>
+						<required>true</required>
+					</property>
+					<property code="soap" type="B" dispnum="0">
+						<value>true</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="soapVersion" type="E" dispnum="0">
+						<value>1.1</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="timeout" type="I" dispnum="0">
+						<value>360000</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="wsdl" type="X" dispnum="0">
+						<value><![CDATA[<definitions name='MessageReceiverService' targetNamespace='http://mom.scc.com/' xmlns='http://schemas.xmlsoap.org/wsdl/' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:tns='http://mom.scc.com/' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+      <types>
+          <xs:schema targetNamespace='http://mom.scc.com/' version='1.0' xmlns:tns='http://mom.scc.com/' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+              <xs:element name='onMessage' type='tns:onMessage'/>
+              <xs:element name='onMessageResponse' type='tns:onMessageResponse'/>
+              <xs:element name='onMessageList' type='tns:onMessageList'/>
+              <xs:element name='onMessageListResponse' type='tns:onMessageListResponse'/>
+              <xs:complexType name='onMessage'>
+                  <xs:sequence>
+                      <xs:element minOccurs='0' name='msg' type='tns:destinationMessage'/>
+                  </xs:sequence>
+
+              </xs:complexType>
+              <xs:complexType name='onMessageList'>
+                  <xs:sequence>
+                      <xs:element minOccurs='0' maxOccurs='unbounded' name='msg' type='tns:destinationMessage'/>
+                  </xs:sequence>
+              </xs:complexType>
+              <xs:complexType name='destinationMessage'>
+                  <xs:complexContent>
+                      <xs:extension base='tns:message'>
+                          <xs:sequence>
+                              <xs:element name='destMsgId' type='xs:long'/>
+                              <xs:element minOccurs='0' name='sendDate' type='xs:dateTime'/>
+                              <xs:element minOccurs='0' name='forceDelivery' type='xs:boolean'/>
+                              <xs:element minOccurs='0' name='muti' type='xs:string'/>
+                          </xs:sequence>
+                      </xs:extension>
+                  </xs:complexContent>
+              </xs:complexType>
+              <xs:complexType name='destination'>
+                  <xs:sequence>
+                      <xs:element minOccurs='0' name='resultCode' type='xs:int'/>
+                      <xs:element minOccurs='0' name='groupCode' type='xs:string'/>
+                      <xs:element minOccurs='0' name='extId' type='xs:string'/>
+                      <xs:element minOccurs='0' name='destCode' type='xs:string'/>
+                  </xs:sequence>
+              </xs:complexType>
+              <xs:complexType name='message'>
+                  <xs:sequence>
+                      <xs:element maxOccurs='unbounded' minOccurs='0' name='attributes' nillable='true' type='tns:attribute'/>
+                      <xs:element maxOccurs='unbounded' minOccurs='0' name='destinations' nillable='true' type='xs:string'/>
+                      <xs:element minOccurs='0' name='eventCode' type='xs:string'/>
+                      <xs:element minOccurs='0' name='eventType' type='xs:string'/>
+                      <xs:element minOccurs='0' name='extId' type='xs:string'/>
+                      <xs:element minOccurs='0' name='groupCode' type='xs:string'/>
+                      <xs:element minOccurs='0' name='msgText' type='xs:string'/>
+                      <xs:element minOccurs='0' name='resultCode' type='xs:int'/>
+                      <xs:element minOccurs='0' name='senderCode' type='xs:string'/>
+                      <xs:element maxOccurs='unbounded' minOccurs='0' name='NDestinations' nillable='true' type='tns:destination'/>
+                      <xs:element minOccurs='0' name='msgTextId' type='xs:int'/>
+                  </xs:sequence>
+              </xs:complexType>
+              <xs:complexType name='attribute'>
+                  <xs:sequence>
+                      <xs:element minOccurs='0' name='name' type='xs:string'/>
+                      <xs:element minOccurs='0' name='value' type='xs:string'/>
+                  </xs:sequence>
+              </xs:complexType>
+              <xs:complexType name='onMessageResponse'>
+                  <xs:sequence>
+                      <xs:element minOccurs='0' name='return' type='tns:deliveryResult'/>
+                  </xs:sequence>
+              </xs:complexType>
+              <xs:complexType name='onMessageListResponse'>
+                  <xs:sequence>
+                      <xs:element minOccurs='0' name='return' type='tns:deliveryResultList'/>
+                  </xs:sequence>
+              </xs:complexType>
+              <xs:complexType name='payload'>
+                  <xs:sequence>
+                      <xs:element name='msgTextId' type='xs:int'/>
+                      <xs:element name='msgText' type='xs:string'/>
+                  </xs:sequence>
+              </xs:complexType>
+              <xs:complexType name='deliveryResultList'>
+                  <xs:sequence>
+                      <xs:element maxOccurs='unbounded' minOccurs='0' name='results' type='tns:deliveryResult'/>
+                      <xs:element maxOccurs='unbounded' minOccurs='0' name='payloads' type='tns:payload'/>
+                  </xs:sequence>
+              </xs:complexType>
+              <xs:complexType name='deliveryResult'>
+                  <xs:complexContent>
+                      <xs:extension base='tns:result'>
+                          <xs:sequence>
+                              <xs:element name='destMsgId' type='xs:long'/>
+                              <xs:element minOccurs='0' name='extId' type='xs:string'/>
+                              <xs:element maxOccurs='unbounded' minOccurs='0' name='messages' nillable='true' type='tns:message'/>
+                              <xs:element minOccurs='0' name='processingCode' type='xs:string'/>
+                              <xs:element minOccurs='0' name='esbInstance' type='xs:string'/>
+                          </xs:sequence>
+                      </xs:extension>
+                  </xs:complexContent>
+              </xs:complexType>
+              <xs:complexType name='result'>
+                  <xs:sequence>
+                      <xs:element minOccurs='0' name='details' type='xs:string'/>
+                      <xs:element name='resultCode' type='xs:int'/>
+                  </xs:sequence>
+              </xs:complexType>
+          </xs:schema>
+      </types>
+      <message name='MessageReceiverService_onMessageResponse'>
+          <part element='tns:onMessageResponse' name='onMessageResponse'></part>
+      </message>
+      <message name='MessageReceiverService_onMessage'>
+          <part element='tns:onMessage' name='onMessage'></part>
+      </message>
+      <message name='MessageReceiverService_onMessageListResponse'>
+          <part element='tns:onMessageListResponse' name='onMessageListResponse'></part>
+      </message>
+      <message name='MessageReceiverService_onMessageList'>
+          <part element='tns:onMessageList' name='onMessageList'></part>
+      </message>
+      <portType name='MessageReceiverService'>
+          <operation name='onMessage' parameterOrder='onMessage'>
+              <input message='tns:MessageReceiverService_onMessage'></input>
+              <output message='tns:MessageReceiverService_onMessageResponse'></output>
+          </operation>
+          <operation name='onMessageList' parameterOrder='onMessageList'>
+              <input message='tns:MessageReceiverService_onMessageList'></input>
+              <output message='tns:MessageReceiverService_onMessageListResponse'></output>
+          </operation>
+      </portType>
+      <binding name='MessageReceiverServiceBinding' type='tns:MessageReceiverService'>
+          <soap:binding style='document' transport='http://schemas.xmlsoap.org/soap/http'/>
+          <operation name='onMessage'>
+              <soap:operation soapAction=''/>
+              <input>
+                  <soap:body use='literal'/>
+              </input>
+              <output>
+                  <soap:body use='literal'/>
+              </output>
+          </operation>
+          <operation name='onMessageList'>
+              <soap:operation soapAction=''/>
+              <input>
+                  <soap:body use='literal'/>
+              </input>
+              <output>
+                  <soap:body use='literal'/>
+              </output>
+          </operation>
+      </binding>
+      <service name='${INSTANCE_CODE}'>
+          <port binding='tns:MessageReceiverServiceBinding' name='MessageReceiverServicePort'>
+              <soap:address location='http://www.softcomputer.com/MessageReceiverService'/>
+          </port>
+      </service>
+  </definitions>]]></value>
+						<enums/>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="01_xslt_CheckParam1" type="xsl transformation" dispnum="0">
+				<compprops>
+					<property code="parameters" type="P" dispnum="0">
+						<value><![CDATA[allowedWorkstations=${allowedWorkstations}
+blockedWorkstations=${blockedWorkstations}]]></value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="xsl" type="X" dispnum="0">
+						<value><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: ADXL.OUT.LABTEK.NEWTEST.WS.xml 10916 2021-12-07 07:45:49Z rafalpa $ -->
+<xsl:stylesheet version="2.0"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:saxon="http://saxon.sf.net/"
+	xmlns:ns2="http://mom.scc.com/"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:cmn="http://www.softcomputer.com/COMMON/RROutService"
+    xmlns:tab="http://softcomputer.com/SoftGene/Translations"
+	exclude-result-prefixes="#all">
+	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="no"/>
+	<xsl:strip-space elements="*"/>
+	
+	<tab:t>${MISCTABLES}</tab:t> 
+	
+    <!--
+		****************************************************************************
+		*** String parameters.
+		****************************************************************************
+	-->
+	<xsl:param name="allowedWorkstations" as="xs:string">-</xsl:param>
+	<xsl:param name="blockedWorkstations" as="xs:string">-</xsl:param>
+
+	<xsl:function name="cmn:matchPatern" as="xs:boolean">
+		<xsl:param name="item"/>
+		<xsl:param name="list"/>
+		<xsl:param name="delimiter"/>
+		<xsl:variable name="l" select="translate($list, ' ', '')"/>
+		<xsl:variable name="useMatch" select="if ( contains($list, '{*}') ) then true() else false()"/>
+		<xsl:choose>
+			<xsl:when test="string($l) and string($item) and string($delimiter)">
+				<xsl:choose>
+					<xsl:when test="$useMatch and contains($l,',')">
+						<xsl:variable name="isOnList">
+						<xsl:for-each select="tokenize($l,',')">
+							<xsl:value-of select="if (matches($item, concat('^',replace(., '\{\*\}', '.*'),'$'))) then 'Y' else '' "/>
+						</xsl:for-each>
+						</xsl:variable>
+						<xsl:value-of select="contains($isOnList,'Y')"/>
+					</xsl:when>
+					<xsl:when test="$useMatch"><xsl:value-of select="matches($item, concat('^',replace($l, '\{\*\}', '.*'),'$'))"/></xsl:when>
+					<xsl:otherwise><xsl:value-of select="contains(concat($delimiter, $l, $delimiter), concat($delimiter, $item, $delimiter))"/></xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
+
+	<!--
+		****************************************************************************
+		*** Variables.
+		****************************************************************************
+	-->
+	<!-- msg -->
+	<xsl:variable name="msg" select="if (/ns2:onMessage/msg) then /ns2:onMessage/msg else /ns2:onMessageList/msg[not( ./destMsgId &lt; /ns2:onMessageList/msg/destMsgId)][1]"/>
+	<!--
+		Extracted message - disabled escaping.
+	-->
+	<xsl:variable name="extractedMsg" select="saxon:parse($msg/msgText)/node()"/>
+	<!--
+		Workstation code - required to check allowed workstations.
+	-->
+	<xsl:variable name="workstation" select="$extractedMsg//pidLevel/pv1Level/orcLevel/obrLevel/obxLevel/obx/orderingWorkstation"/>
+	<!--
+		Transaction status - indicates send or drop.
+	-->
+	<xsl:variable name="status">
+		<xsl:choose>
+			<!-- Disable checking workstations for batch processing -->
+			<xsl:when test="/ns2:OnMessageList">OK</xsl:when>
+			<!-- Check if all obx/orderingWorkstation are on the blocked list. -->
+			<xsl:when test="$blockedWorkstations != '-'
+							and $workstation != ''
+							and not($workstation[not(cmn:matchPatern(., $blockedWorkstations, ','))])">
+				<xsl:variable name="currWorkstationList">
+					<xsl:for-each-group select="$workstation" group-by="."><xsl:value-of select="."/>,</xsl:for-each-group>
+				</xsl:variable>
+				<xsl:value-of select="concat('All workstations (',substring($currWorkstationList,1,string-length($currWorkstationList)-1),') are on the blocked list [', $blockedWorkstations,' ].')"/>
+			</xsl:when>
+			<!-- Check if at least one obx/orderingWorkstation is on the allowed list. -->
+			<xsl:when test="$allowedWorkstations != '-'
+							and not($workstation[cmn:matchPatern(., $allowedWorkstations, ',')])">
+				<xsl:variable name="currWorkstationList">
+					<xsl:for-each-group select="$workstation" group-by="."><xsl:value-of select="."/>,</xsl:for-each-group>
+				</xsl:variable>
+				<xsl:value-of select="concat('None of workstations (',substring($currWorkstationList,1,string-length($currWorkstationList)-1),') is on the allowed list [',$allowedWorkstations,'].')"/>
+			</xsl:when>
+			<xsl:otherwise>OK</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<!--
+		****************************************************************************
+		*** The main match.
+		****************************************************************************
+	-->
+	<xsl:template match="ns2:onMessage | ns2:onMessageList">
+		<xsl:choose>
+			<xsl:when test="$status = 'OK'">
+				<xsl:copy-of select="."/>
+			</xsl:when>
+			<xsl:otherwise>
+				<skip><xsl:value-of select="$status"/></skip>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+</xsl:stylesheet>]]></value>
+						<enums/>
+						<required>true</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="02_xslt_GIprep" type="xsl transformation" dispnum="0">
+				<compprops>
+					<property code="defaultXslFile" type="FILE" dispnum="-1">
+						<value>${env.DICT}/gui/eis/xslt/xslMsgCopy.xsl</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="xslFile" type="S" dispnum="0">
+						<value>${env.DICT}/gui/eis/clients/${!DICT.CLIENT_ID}/xslt/${INSTANCE_CODE}/prepStoreHisNumber.xslt</value>
+						<enums/>
+						<required>true</required>
+					</property>
+					<property code="optional" type="B" dispnum="0">
+						<value>true</value>
+						<enums/>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="02A_xslt_PrepAuxOrdUpd" type="xsl transformation" dispnum="0">
+				<compprops>
+					<property code="defaultXslFile" type="FILE" dispnum="-1">
+						<value>${env.DICT}/gui/eis/xslt/xslMsgCopy.xsl</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="xslFile" type="S" dispnum="0">
+						<value>${env.DICT}/gui/eis/clients/${!DICT.CLIENT_ID}/xslt/${INSTANCE_CODE}/prepAuxOrdUpd.xslt</value>
+						<enums/>
+						<required>true</required>
+					</property>
+					<property code="optional" type="B" dispnum="0">
+						<value>true</value>
+						<enums/>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="03_jdbc_GIcall" type="jdbc store" dispnum="7">
+				<compprops>
+					<property code="flow.active" type="BOOLEAN" dispnum="-1">
+						<value>${activePreStoredProcedure}</value>
+						<required>false</required>
+					</property>
+					<property code="driver" type="S" dispnum="0">
+						<value>oracle.jdbc.OracleDriver</value>
+						<required>false</required>
+					</property>
+					<property code="enrichMessage" type="B" dispnum="0">
+						<value>true</value>
+						<required>false</required>
+					</property>
+					<property code="faultManagement" type="E" dispnum="0">
+						<value>FAULT_JBI</value>
+						<required>false</required>
+					</property>
+					<property code="jndiDataSource" type="S" dispnum="0">
+						<value>GIDS</value>
+						<required>true</required>
+					</property>
+					<property code="query" type="S" dispnum="0">
+						<value>${preStoredProcedureQuery}</value>
+						<required>true</required>
+					</property>
+					<property code="queryXPath" type="S" dispnum="0">
+						<value>${preStoredProcedureQueryXpath}</value>
+						<required>false</required>
+					</property>
+					<property code="queryParams" type="S" dispnum="0">
+						<value>${preStoredProcedureParams}</value>
+						<required>false</required>
+					</property>
+					<property code="rowsXmlEnvelope" type="S" dispnum="0">
+						<value>StoredProcParams</value>
+						<required>false</required>
+					</property>
+					<property code="rowXmlEnvelope" type="S" dispnum="0">
+						<value>OneRow</value>
+						<required>false</required>
+					</property>
+					<property code="xmlEnvelope" type="S" dispnum="0">
+						<value>Message/ReportableComponents</value>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="03_jdbc_PreSqlQuery" type="jdbc query" dispnum="8">
+				<compprops>
+					<property code="flow.active" type="BOOLEAN" dispnum="-1">
+						<value>${activePreSqlQuery}</value>
+						<required>false</required>
+					</property>
+					<property code="driver" type="S" dispnum="0">
+						<value>oracle.jdbc.OracleDriver</value>
+						<required>false</required>
+					</property>
+					<property code="enrichMessage" type="B" dispnum="0">
+						<value>true</value>
+						<required>false</required>
+					</property>
+					<property code="faultManagement" type="E" dispnum="0">
+						<value>FAULT_JBI</value>
+						<required>false</required>
+					</property>
+					<property code="jndiDataSource" type="S" dispnum="0">
+						<value>GIDS</value>
+						<required>true</required>
+					</property>
+					<property code="query" type="S" dispnum="0">
+						<value>${preStoredProcedureQuery}</value>
+						<required>true</required>
+					</property>
+					<property code="queryXPath" type="S" dispnum="0">
+						<value>${preStoredProcedureQueryXpath}</value>
+						<required>false</required>
+					</property>
+					<property code="queryParams" type="S" dispnum="0">
+						<value>${preStoredProcedureParams}</value>
+						<required>false</required>
+					</property>
+					<property code="xmlEnvelope" type="S" dispnum="0">
+						<value>//SQL/output</value>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="03_xslt_GIcallErr" type="xsl transformation" dispnum="0">
+				<compprops>
+					<property code="flow.active" type="BOOLEAN" dispnum="-1">
+						<value>${activePreStoredProcedure}</value>
+						<required>false</required>
+					</property>
+					<property code="xsl" type="X" dispnum="0">
+						<value><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: ADXL.OUT.LABTEK.NEWTEST.WS.xml 10916 2021-12-07 07:45:49Z rafalpa $ -->
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xsl:output method="xml" version="1.0" encoding="UTF-8"  indent="no"/>
+	<xsl:template match="/"><xsl:element name="retry"><xsl:attribute name="procedureType">READ</xsl:attribute><xsl:value-of select="concat('JDBC procedure call failed.&#xA;', error)"/></xsl:element></xsl:template>
+</xsl:stylesheet>
+  ]]></value>
+						<enums/>
+						<required>true</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="04_xslt_PrepareMess" type="xsl transformation" dispnum="0">
+				<compprops>
+					<property code="useRtfTranslation" type="B" dispnum="0">
+						<value>true</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="defaultXslFile" type="FILE" dispnum="-1">
+						<value>${env.DICT}/gui/eis/xslt/xslMsgCopy.xsl</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="xslFile" type="S" dispnum="0">
+						<value><![CDATA[${customRequestDirectory}]]></value>
+						<enums/>
+						<required>true</required>
+					</property>
+					<property code="optional" type="B" dispnum="0">
+						<value>true</value>
+						<enums/>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="05a_ExtHttpClient" type="http client" dispnum="-1">
+				<compprops>
+					<property code="flow.active" dispnum="-1" type="BOOLEAN">
+						<value>?{ ${outboundProtocolType}=='client' }?</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="soapAction" type="STRING" dispnum="23">
+						<value><![CDATA[${soapAction}]]></value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="soapVersion" type="ENUM" dispnum="24">
+						<value>1.1</value>
+						<enums>
+							<string>1.1</string>
+							<string>1.2</string>
+						</enums>
+						<required>false</required>
+					</property>
+					<property code="timeout" type="INT" dispnum="28">
+						<value>300000</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="uri" type="URL" dispnum="31">
+						<value><![CDATA[${externalURL}]]></value>
+						<enums/>
+						<required>true</required>
+					</property>
+					<property code="soap" type="BOOLEAN" dispnum="22">
+						<value>${useSoap}</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="commTrace" type="BOOLEAN" dispnum="22">
+						<value>true</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="sccsec.active" type="BOOLEAN" dispnum="32">
+						<value>${authenticationEnabled}</value>
+						<enums/>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="05b_ExtHttpSender" type="http sender" dispnum="-1">
+				<compprops>
+					<property code="flow.active" dispnum="-1" type="BOOLEAN">
+						<value>?{ ${outboundProtocolType}=='sender' }?</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="soap" type="BOOLEAN" dispnum="22">
+						<value>false</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="commTrace" type="BOOLEAN" dispnum="23">
+						<value>true</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="timeout" type="INT" dispnum="28">
+						<value>300000</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="uri" type="URL" dispnum="31">
+						<value><![CDATA[${externalURL}]]></value>
+						<enums/>
+						<required>true</required>
+					</property>
+					<property code="inboundMarshaler" type="S" dispnum="22">
+						<value>HTTP_SND_PARAMS</value>
+						<enums/>
+						<required>false</required>
+					</property>
+		    		<property code="inboundMarshalerProperties" type="S" dispnum="22">
+		              <value>${inboundMarshalerProperties}</value>
+                      <enums />
+		              <required>false</required>
+		            </property>
+					<property code="outboundMarshaler" type="S" dispnum="22">
+						<value>HTTP_SND_PARAMS</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="outboundMarshalerProperties" type="S" dispnum="22">
+						<value>${outboundMarshalerProperties}</value>
+						<enums/>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="05c_ExtWsClient" dispnum="-1" type="WsClient">
+				<compprops>
+					<property code="flow.active" dispnum="-1" type="BOOLEAN">
+						<value>?{ ${outboundProtocolType}=='WsClient' }?</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="commTrace" dispnum="-1" type="BOOLEAN">
+						<value>true</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="outInterceptors" dispnum="-1" type="STRING">
+						<value>list.count = 1
+list.1.class = org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="timeout" dispnum="-1" type="INT">
+						<value>300000</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="uri" dispnum="32" type="URL">
+						<value>${externalURL}</value>
+						<enums/>
+						<required>true</required>
+					</property>
+					<property code="wsdlFile" type="FILE" dispnum="-1">
+						<value>${env.DICT}/gui/eis/clients/${!DICT.CLIENT_ID}/xslt/${INSTANCE_CODE}/${wsdlFileName}.wsdl</value>
+						<required>false</required>
+					</property>
+					<property code="wsproperties" dispnum="-1" type="PROPERTIES">
+						<value>user=${user}
+password=${password}
+action=UsernameToken
+passwordType=PasswordText
+addUTElements=Nonce Created</value>   
+						<enums/>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="05d_ExtHttpRestClient" type="HttpRestClient" dispnum="-1">
+				<compprops>
+					<property code="flow.active" dispnum="-1" type="BOOLEAN">
+						<value>?{ ${outboundProtocolType}=='RestClient' }?</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="commTrace" type="BOOLEAN" dispnum="3">
+						<value>true</value>
+						<required>false</required>
+					</property>
+					<property code="inboundMarshaler" type="ENUM" dispnum="17">
+						<value>HTTP_SND_JSON</value>
+						<enums>
+							<string>HTTP_SND_PARAMS</string>
+							<string>HTTP_SND_SOAP</string>
+							<string>HTTP_SND_JSON</string>
+							<string>HTTP_SND</string>
+						</enums>
+						<required>false</required>
+					</property>
+					<property code="inboundMarshalerProperties" type="S" dispnum="22">
+		              <value>${inboundMarshalerProperties}</value>
+                      <enums />
+		              <required>false</required>
+		            </property>
+					<property code="outboundMarshaler" type="ENUM" dispnum="17">
+						<value>HTTP_SND_JSON</value>
+						<enums>
+							<string>HTTP_SND_PARAMS</string>
+							<string>HTTP_SND_SOAP</string>
+							<string>HTTP_SND_JSON</string>
+							<string>HTTP_SND</string>
+						</enums>
+						<required>false</required>
+					</property>
+					<property code="outboundMarshalerProperties" type="S" dispnum="22">
+						<value>${outboundMarshalerProperties}</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="uri" type="URL" dispnum="31">
+						<value><![CDATA[${externalURL}]]></value>
+						<enums/>
+						<required>true</required>
+					</property>
+					<property code="timeout" type="INT" dispnum="28">
+						<value>300000</value>
+						<enums/>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="05e_GeneAuxOrdClient" dispnum="-1" type="http client">
+				<compprops>
+				    <property code="soap" dispnum="35" type="BOOLEAN">
+					  <value>true</value>
+					  <required>false</required>
+				    </property>
+				    <property code="soapVersion" dispnum="37" type="ENUM">
+					  <value>1.1</value>
+					  <enums>
+						 <string>1.1</string>
+						 <string>1.2</string>
+					  </enums>
+					  <required>false</required>
+				    </property>
+				    <property code="timeout" dispnum="41" type="INT">
+					  <value>180000</value>
+					  <required>false</required>
+				    </property>
+				    <property code="uri" dispnum="44" type="URL">
+					  <value><![CDATA[${env.SCC_URL_INT}/gcm/GcmWebServices/services/SoftGeneOrderingServiceSoap]]></value>
+					  <required>true</required>
+				    </property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="06_xslt_GIprep2" type="xsl transformation" dispnum="0">
+				<compprops>
+					<property code="defaultXslFile" type="FILE" dispnum="-1">
+						<value>${env.DICT}/gui/eis/xslt/xslMsgCopy.xsl</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="xslFile" type="S" dispnum="0">
+						<value>${env.DICT}/gui/eis/clients/${!DICT.CLIENT_ID}/xslt/${INSTANCE_CODE}/prepStoreGI.xslt</value>
+						<enums/>
+						<required>true</required>
+					</property>
+					<property code="optional" type="B" dispnum="0">
+						<value>true</value>
+						<enums/>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="06A_xslt_GeneAuxOrdErr" type="xsl transformation" dispnum="0">
+				<compprops>
+					<property code="xsl" type="X" dispnum="0">
+						<value><![CDATA[<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" exclude-result-prefixes="#all">
+				<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+				<xsl:template match="/">
+					<GeneUpdateError >
+						<xsl:choose>
+							<xsl:when test="//SOAP-ENV:Fault//HTTP-ERROR">
+								<xsl:attribute name="httpError" select="'true'"/>
+								<xsl:variable name="path" select="//SOAP-ENV:Fault//HTTP-ERROR"/>
+								<xsl:value-of select="concat('Called WS ', if ($path/url) then concat('[',$path/url,'] ') else '' ,'returned:','&#xa;',
+									if ($path/@code) then concat('- code:     ', $path/@code,'&#xa;') else '',
+									if ($path/@status) then concat('- status:   ', $path/@status,'&#xa;') else '',
+									if ($path/respond/text()) then concat('- details: ', replace($path/respond,'\n',' ')) else '')"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="concat('TRYING TO DELIVER GENE ERROR: ', error)"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</GeneUpdateError>
+				</xsl:template>
+			</xsl:stylesheet>
+			  ]]></value>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="07_jdbc_GIcall2" type="jdbc store" dispnum="7">
+				<compprops>
+					<property code="flow.active" type="BOOLEAN" dispnum="-1">
+						<value>${activePostStoredProcedure}</value>
+						<required>false</required>
+					</property>
+					<property code="driver" type="S" dispnum="0">
+						<value>oracle.jdbc.OracleDriver</value>
+						<required>false</required>
+					</property>
+					<property code="enrichMessage" type="B" dispnum="0">
+						<value>true</value>
+						<required>false</required>
+					</property>
+					<property code="faultManagement" type="E" dispnum="0">
+						<value>FAULT_JBI</value>
+						<required>false</required>
+					</property>
+					<property code="jndiDataSource" type="S" dispnum="0">
+						<value>GIDS</value>
+						<required>true</required>
+					</property>
+					<property code="query" type="S" dispnum="0">
+						<value>${postStoredProcedureQuery}</value>
+						<required>true</required>
+					</property>
+					<property code="queryXPath" type="S" dispnum="0">
+						<value>${postStoredProcedureQueryXpath}</value>
+						<required>false</required>
+					</property>
+					<property code="queryParams" type="S" dispnum="0">
+						<value>${postStoredProcedureParams}</value>
+						<required>false</required>
+					</property>
+					<property code="rowsXmlEnvelope" type="S" dispnum="0">
+						<value>StoredProcParams</value>
+						<required>false</required>
+					</property>
+					<property code="rowXmlEnvelope" type="S" dispnum="0">
+						<value>OneRow</value>
+						<required>false</required>
+					</property>
+					<property code="xmlEnvelope" type="S" dispnum="0">
+						<value>join/StoredProcParams/O</value>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="07_jdbc_PostSqlQuery" type="jdbc query" dispnum="7">
+				<compprops>
+					<property code="flow.active" type="BOOLEAN" dispnum="-1">
+						<value>${activePostSqlQuery}</value>
+						<required>false</required>
+					</property>
+					<property code="driver" type="S" dispnum="0">
+						<value>oracle.jdbc.OracleDriver</value>
+						<required>false</required>
+					</property>
+					<property code="enrichMessage" type="B" dispnum="0">
+						<value>true</value>
+						<required>false</required>
+					</property>
+					<property code="faultManagement" type="E" dispnum="0">
+						<value>FAULT_JBI</value>
+						<required>false</required>
+					</property>
+					<property code="jndiDataSource" type="S" dispnum="0">
+						<value>GIDS</value>
+						<required>true</required>
+					</property>
+					<property code="query" type="S" dispnum="0">
+						<value>${postStoredProcedureQuery}</value>
+						<required>true</required>
+					</property>
+					<property code="queryXPath" type="S" dispnum="0">
+						<value>${postStoredProcedureQueryXpath}</value>
+						<required>false</required>
+					</property>
+					<property code="queryParams" type="S" dispnum="0">
+						<value>${postStoredProcedureParams}</value>
+						<required>false</required>
+					</property>
+					<property code="xmlEnvelope" type="S" dispnum="0">
+						<value>//SQL/output</value>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="08_xslt_GIcall2Err" type="xsl transformation" dispnum="0">
+				<compprops>
+					<property code="flow.active" type="BOOLEAN" dispnum="-1">
+						<value>${activePreStoredProcedure}</value>
+						<required>false</required>
+					</property>
+					<property code="xsl" type="X" dispnum="0">
+						<value><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: ADXL.OUT.LABTEK.NEWTEST.WS.xml 10916 2021-12-07 07:45:49Z rafalpa $ -->
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xsl:output method="xml" version="1.0" encoding="UTF-8"  indent="no"/>
+	<xsl:template match="/"><xsl:element name="retry"><xsl:attribute name="procedureType">STORE</xsl:attribute><xsl:value-of select="concat('JDBC procedure call failed.&#xA;', error)"/></xsl:element></xsl:template>
+</xsl:stylesheet>]]></value>
+						<enums/>
+						<required>true</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="09_xslt_Response" type="xsl transformation" dispnum="0">
+				<compprops>
+					<property code="defaultXslFile" type="FILE" dispnum="-1">
+						<value>${env.DICT}/gui/eis/xslt/xslMsgCopy.xsl</value>
+						<enums/>
+						<required>false</required>
+					</property>
+					<property code="xslFile" type="S" dispnum="0">
+						<value><![CDATA[${customResponseDirectory}]]></value>
+						<enums/>
+						<required>true</required>
+					</property>
+					<property code="optional" type="B" dispnum="0">
+						<value>true</value>
+						<enums/>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+			<smxcomponent code="settings" type="settings" dispnum="-1">
+				<compprops>
+					<property code="id" type="S" dispnum="0">
+						<value>settings</value>
+						<required>false</required>
+					</property>
+					<property code="maxEntrySize" type="I" dispnum="0">
+						<value>10000000</value>
+						<required>false</required>
+					</property>
+					<property code="maxFileCount" type="I" dispnum="0">
+						<value>${!DICT.MAX_FILE_COUNT}</value>
+						<required>false</required>
+					</property>
+					<property code="maxFileSize" type="S" dispnum="0">
+						<value>40000000</value>
+						<required>false</required>
+					</property>
+					<property code="maxTraceAge" type="I" dispnum="0">
+						<value>${!DICT.TRACE_AGE_CMN}</value>
+						<required>false</required>
+					</property>
+					<property code="logLevel" type="E" dispnum="0">
+						<value>${!DICT.INT_TRACE_LVL}</value>
+						<required>false</required>
+					</property>
+				</compprops>
+			</smxcomponent>
+		</components>
+		<connections>
+			<connection from="00_http server" to="01_xslt_CheckParam1" filter="" trace="true" fork="false" error="false" comment=""/>
+			<connection from="00_http server" to="09_xslt_Response" trace="true" fork="true" error="false"/>
+			<connection from="01_xslt_CheckParam1" to="02_xslt_GIprep" filter="not(//skip)" trace="true" fork="false" error="false" comment=""/>
+			
+			<connection from="01_xslt_CheckParam1" to="02A_xslt_PrepAuxOrdUpd" filter="not(//skip) and not(//msg/attributes[name='AUXILIARY_ORDER']/value/text())" trace="true" fork="true" error="false" comment=""/>
+			
+			<connection from="01_xslt_CheckParam1" to="09_xslt_Response" filter="//skip" trace="true" fork="false" error="false"/>
+			<connection from="02_xslt_GIprep" to="03_jdbc_GIcall" filter=" '${activePreStoredProcedure}' = 'true' and //Header/Route='updateGI' " trace="true" fork="false" error="false" comment=""/>
+			<connection from="02_xslt_GIprep" to="03_jdbc_PreSqlQuery" filter=" '${activePreSqlQuery}' = 'true' " trace="true" fork="false" error="false" comment=""/>
+			<connection from="02_xslt_GIprep" to="04_xslt_PrepareMess" filter="//Header/Route='newTest'" trace="true" fork="true" error="false" comment=""/>
+			<connection from="02_xslt_GIprep" to="06_xslt_GIprep2" filter=" '${activePreStoredProcedure}'  != 'true' and '${activePostStoredProcedure}' = 'true' " trace="true" fork="true" error="false" comment=""/>
+			<connection from="02_xslt_GIprep" to="06_xslt_GIprep2" filter=" '${activePreSqlQuery}'  != 'true' and '${activePostSqlQuery}' = 'true' " trace="true" fork="true" error="false" comment=""/>
+			
+			<connection from="02A_xslt_PrepAuxOrdUpd" to="05e_GeneAuxOrdClient" filter="" trace="true" fork="false" error="false" comment=""/>
+			
+			<connection from="03_jdbc_GIcall" to="04_xslt_PrepareMess" filter=" '${activePreStoredProcedure}'  = 'true'" trace="true" fork="true" error="false" comment=""/>
+			<connection from="03_jdbc_PreSqlQuery" to="04_xslt_PrepareMess" filter=" '${activePreSqlQuery}'  = 'true' " trace="true" fork="true" error="false" comment=""/>
+			<connection from="03_jdbc_GIcall" to="06_xslt_GIprep2" filter=" '${activePreStoredProcedure}'  = 'true' and '${activePostStoredProcedure}' = 'true' " trace="true" fork="true" error="false" comment=""/>
+			<connection from="03_jdbc_PreSqlQuery" to="06_xslt_GIprep2" filter=" '${activePreSqlQuery}'  = 'true' and '${activePostSqlQuery}' = 'true' " trace="true" fork="true" error="false" comment=""/>
+			<connection from="03_jdbc_GIcall" to="03_xslt_GIcallErr" filter=" '${activePreStoredProcedure}'  = 'true' " trace="true" fork="false" error="true" comment=""/>
+			<connection from="03_jdbc_PreSqlQuery" to="03_xslt_GIcallErr" filter=" '${activePreSqlQuery}'  = 'true' " trace="true" fork="false" error="true" comment=""/>
+			<connection from="03_xslt_GIcallErr" to="09_xslt_Response" filter=" '${activePreStoredProcedure}'  = 'true' or '${activePreSqlQuery}'  = 'true' " trace="true" fork="false" error="false" comment=""/>
+			<connection from="04_xslt_PrepareMess" to="05a_ExtHttpClient" filter="not(//skip)" trace="true" fork="false" error="false"/>
+			<connection from="04_xslt_PrepareMess" to="05c_ExtWsClient" filter="not(//skip)" trace="true" fork="false" error="false"/>
+			<connection from="04_xslt_PrepareMess" to="05b_ExtHttpSender" filter="not(//skip)" trace="true" fork="false" error="false"/>
+			<connection from="04_xslt_PrepareMess" to="05d_ExtHttpRestClient" filter="not(//skip)" trace="true" fork="false" error="false"/>
+			<connection from="04_xslt_PrepareMess" to="09_xslt_Response" filter="//skip" trace="true" fork="false" error="false"/>
+			<connection from="05a_ExtHttpClient" to="06_xslt_GIprep2" trace="true" fork="false" error="false"/>
+			<connection from="05a_ExtHttpClient" to="09_xslt_Response" trace="true" fork="false" error="true"/>
+			<connection from="05b_ExtHttpSender" to="06_xslt_GIprep2" trace="true" fork="false" error="false"/>
+			<connection from="05b_ExtHttpSender" to="09_xslt_Response" trace="true" fork="false" error="true"/>
+			<connection from="05c_ExtWsClient" to="06_xslt_GIprep2" trace="true" fork="false" error="false"/>
+			<connection from="05c_ExtWsClient" to="09_xslt_Response" trace="true" fork="false" error="true"/>
+			<connection from="05d_ExtHttpRestClient" to="06_xslt_GIprep2" trace="true" fork="false" error="false"/>
+			<connection from="05d_ExtHttpRestClient" to="09_xslt_Response" trace="true" fork="false" error="true"/>
+
+			<connection from="05e_GeneAuxOrdClient" to="06A_xslt_GeneAuxOrdErr" filter="" trace="true" fork="true" error="true" comment=""/>
+			<connection from="05e_GeneAuxOrdClient" to="09_xslt_Response" filter="" trace="false" fork="true" error="false" comment=""/>
+			<connection from="05e_GeneAuxOrdClient" to="02_xslt_GIprep" filter="" trace="false" fork="true" error="false" comment=""/>
+
+			<connection from="06_xslt_GIprep2" to="07_jdbc_GIcall2" filter=" '${activePostStoredProcedure}' = 'true' " trace="true" fork="false" error="false"/>
+			<connection from="06_xslt_GIprep2" to="07_jdbc_PostSqlQuery" filter=" '${activePostSqlQuery}' = 'true' " trace="true" fork="false" error="false"/>
+			<connection from="06_xslt_GIprep2" to="09_xslt_Response" filter=" '${activePostStoredProcedure}' != 'true' and '${activePostSqlQuery}' != 'true'" trace="true" fork="false" error="false"/>
+			
+			<connection from="06A_xslt_GeneAuxOrdErr" to="09_xslt_Response" filter="" trace="true" fork="false" error="false" comment=""/>
+			
+			<connection from="07_jdbc_GIcall2" to="09_xslt_Response" trace="true" fork="false" error="false"/>
+			<connection from="07_jdbc_PostSqlQuery" to="09_xslt_Response" trace="true" fork="false" error="false"/>
+			<connection from="07_jdbc_GIcall2" to="08_xslt_GIcall2Err" filter=" '${activePostStoredProcedure}' = 'true' " trace="true" fork="false" error="true"/>
+			<connection from="07_jdbc_PostSqlQuery" to="08_xslt_GIcall2Err" filter=" '${activePostSqlQuery}' = 'true' " trace="true" fork="false" error="true"/>
+			<connection from="08_xslt_GIcall2Err" to="09_xslt_Response" trace="true" fork="false" error="false"/>
+			<connection from="09_xslt_Response" to="00_http server" filter="" trace="true" fork="false" error="false" comment=""/>
+		</connections>
+	</esbconf>
+	<usersetup>
+		<others>
+			<note/>
+			<barcodeproperty>&lt;SAMPLEID_UNFORMAT&gt;</barcodeproperty>
+			<esbstandalone>false</esbstandalone>
+			<active>true</active>
+			<download accumulateldl="false" accumulateldlfor="0">
+				<redownload redownloadtype="M">
+					<firstredownload>30</firstredownload>
+					<maxredownloaddelay>600</maxredownloaddelay>
+					<nextredownloadratio>2</nextredownloadratio>
+					<resumeevery>0</resumeevery>
+					<numberofattempts>0</numberofattempts>
+				</redownload>
+			</download>
+			<qualifyby qualbysite="false" qualbydep="false" qualbyowks="false"/>
+			<scheduler days="0" logs="false"/>
+			<batch convertpos="false" fillalg="L" rowcount="0" colcount="0"/>
+			<qc maxattachtestperiod="0">
+				<autopostresults>false</autopostresults>
+				<askuserverifyresults>false</askuserverifyresults>
+				<autoverifyresultsautopost>false</autoverifyresultsautopost>
+				<qualifiedbyusedinstrument>false</qualifiedbyusedinstrument>
+				<orderwksasusedinstr>false</orderwksasusedinstr>
+				<intern>false</intern>
+				<user/>
+				<password/>
+				<patterns>
+					<ctid/>
+					<rtid/>
+					<numid/>
+					<numid2/>
+					<idpattern/>
+					<numpattern/>
+					<idprop/>
+					<numprop/>
+				</patterns>
+			</qc>
+			<addtests>false</addtests>
+			<conttransidpattern>&lt;[BARCODE]&gt;</conttransidpattern>
+			<reqtransidpattern/>
+			<alternativeidpattern/>
+			<supressTestLdls>false</supressTestLdls>
+			<postUnknowBarcodes>false</postUnknowBarcodes>
+		</others>
+		<parameters>
+			<!-- Miscellaneous -->
+			<parameter code="_IS_ACTIVE_CONFIGURATION"  comment="Enable/disable starting (allowed values: true,false)" defval="true" export="false" hidden="false" overwrite="false" grp="Miscellaneous"/>
+			<parameter code="serviceName" defval="${INSTANCE_CODE}" export="true" hidden="false" overwrite="false" grp="Miscellaneous"/>
+			<parameter code="customRequestDirectory" defval="${env.DICT}/gui/eis/clients/${!DICT.CLIENT_ID}/xslt/${INSTANCE_CODE}/prepRequest.xslt" comment="Directory where is placed xst stylesheet file used for creating request to External service." export="true" hidden="false" overwrite="false" grp="Miscellaneous"/>
+			<parameter code="customResponseDirectory" defval="${env.DICT}/gui/eis/clients/${!DICT.CLIENT_ID}/xslt/${INSTANCE_CODE}/prepResponse.xslt" comment="Directory where is placed xst stylesheet file used for supporting response from External service." export="true" hidden="false" overwrite="false" grp="Miscellaneous"/>
+			<parameter code="allowedWorkstations" defval="-" comment="List of comma seperated allowed ordering workstation codes. Checked after blocked workstations. Accepts {*} as any set of characters e.g. ABC{*} means any workstation that starts with ABC" export="true" hidden="false" overwrite="false" grp="Miscellaneous"/>
+			<parameter code="blockedWorkstations" defval="-" comment="List of comma seperated blocked ordering workstation codes. Checked prior to allowedWorkstations. Accepts {*} as any set of characters e.g. ABC{*} means any workstation that starts with ABC" export="true" hidden="false" overwrite="false" grp="Miscellaneous"/>
+			<!-- Outbound connection details -->
+			<parameter code="outboundProtocolType" defval="client" comment="Specifies which component should be used to connect to external system http 'client' (for soap) or 'WsClient' (for rest for WsClient) or 'sender' (for rest)." export="true" hidden="false" overwrite="false" grp="Outbound connection details"/>
+			<parameter code="externalURL" export="false" hidden="false" overwrite="false" grp="Outbound connection details"/>
+			<parameter code="soapAction" export="true" hidden="false" overwrite="false" grp="Outbound connection details"/>
+			<parameter code="useSoap" defval="true" export="true" hidden="false" overwrite="false" grp="Outbound connection details"/>
+			<parameter code="inboundMarshalerProperties" defval="" comment="Inbound marshaler properties for http sender component (multiline)" export="true" hidden="false" overwrite="false" grp="Outbound connection details"/>
+			<parameter code="outboundMarshalerProperties" defval="" comment="Inbound marshaler properties for http sender component (multiline)" export="true" hidden="false" overwrite="false" grp="Outbound connection details"/>
+			<parameter code="authenticationEnabled" defval="false" comment="controls if authentication is enabled, connected with 'sccsec.active' ESB property" export="true" hidden="false" overwrite="false" grp="Outbound connection details"/>
+			<parameter code="user" comment="User for WsClient" export="false" hidden="false" overwrite="false" grp="Outbound connection details"/>
+			<parameter code="password" comment="Password for WsClient" export="false" hidden="false" overwrite="false" grp="Outbound connection details"/>
+			<parameter code="wsdlFileName" comment="WSDL file name for WsClient (w/o extension)" export="false" hidden="false" overwrite="false" grp="Outbound connection details"/>
+			<!-- Stored procedure params -->
+			<parameter code="activePreStoredProcedure" defval="false" comment="Run sql procedure set up in table (before external service call). (true/false)" export="true" hidden="false" overwrite="false" grp="Stored procedure"/>
+			<parameter code="preStoredProcedureQuery" defval="" comment="" export="true" hidden="false" overwrite="false" grp="Stored procedure"/>
+			<parameter code="preStoredProcedureQueryXpath" defval="" comment="Query path from incoming message; it has higher priority then query parameter and if value got by this xPath is not empty" export="true" hidden="false" overwrite="false" grp="Stored procedure"/>
+			<parameter code="preStoredProcedureParams" defval="" comment="" export="true" hidden="false" overwrite="false" grp="Stored procedure"/>
+			<parameter code="activePostStoredProcedure" defval="false" comment="Run sql procedure set up in table (after external service call). (true/false)" export="true" hidden="false" overwrite="false" grp="Stored procedure"/>
+			<parameter code="postStoredProcedureQuery" defval="" comment="" export="true" hidden="false" overwrite="false" grp="Stored procedure"/>
+			<parameter code="postStoredProcedureQueryXpath" defval="" comment="Query path from incoming message; it has higher priority then query parameter and if value got by this xPath is not empty" export="true" hidden="false" overwrite="false" grp="Stored procedure"/>
+			<parameter code="postStoredProcedureParams" defval="" comment="" export="true" hidden="false" overwrite="false" grp="Stored procedure"/>
+			<!--Sql query-->
+			<parameter code="activePreSqlQuery" defval="false" comment="Run sql query set up in table (before external service call). (true/false)" export="true" hidden="false" overwrite="false" grp="Stored procedure"/>
+			<parameter code="activePostSqlQuery" defval="false" comment="Run sql query set up in table (after external service call). (true/false)" export="true" hidden="false" overwrite="false" grp="Stored procedure"/>
+			<parameter code="originWebErrorMonitor" hidden="false" update="true" value="BioReference"/>
+			<parameter code="endDestinationWebErrorMonitor" comment="The destination that will be monitored by WEB Error Monitor console for status Completed." defval="WS.${INSTANCE_CODE}" export="true" grp="Miscellaneous" hidden="false" overwrite="false"/>
+		</parameters>
+		<qualifications/>
+		<transvalues/>
+		<resadjrules/>
+		<routecodes>
+			<routecode wrks="&lt;DEF_ROUTE&gt;" rcode="Default"/>
+			<routecode wrks="&lt;ERR_ROUTE&gt;" rcode="Error"/>
+		</routecodes>
+		<misctables/>
+	</usersetup>
+	<graphstate/>
+</model>

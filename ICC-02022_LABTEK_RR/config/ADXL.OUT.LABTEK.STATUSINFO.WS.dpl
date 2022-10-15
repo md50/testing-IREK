@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: ADXL.OUT.LABTEK.STATUSINFO.WS.dpl 11385 2022-02-28 08:34:32Z rafalpa $ -->
+<!--  
+	outbound Web Service for status update to LabTek system (JSON REST WS interface)
+-->
+<dpl name="ADXL.OUT.LABTEK.STATUSINFO.WS">
+	<items>
+		<inst code="ADXL.OUT.LABTEK.STATUSINFO.WS" name="ADXL.OUT.LABTEK.STATUSINFO.WS" model="ADXL.OUT.LABTEK.STATUSINFO.WS" category="OUTBOUND" esb="FARM" tz="US/Central" active="true" run="true" modifoverwrite="true" condition="" mu2param="">
+			<todo/>
+			<parameters>
+				<param code="externalURL" hidden="false" update="true" value="${!DICT.HOST_WS}/StatusUpdate"/>
+				<param code="serviceName" hidden="false" update="true" value="ADXL.OUT.LABTEK.STATUSINFO.WS"/>
+				<param code="outboundMarshalerProperties" hidden="false" update="true" value="contentType=application/json&#10;restRespond=true&#10;locationURIXPath=Message/@resource&#10;methodXPath=Message/@method&#10;headersExpr=Authorization=xpath://Header/Authorization"/>
+				<param code="inboundMarshalerProperties" hidden="false" update="true" value="restRespond=true&#10;streamMarshaler.populateHttpRespondInfoToNm=true&#10;streamMarshaler.messageTransformer.parser.fixBadNames=true"/>
+			</parameters>
+		</inst>
+	</items>
+</dpl>

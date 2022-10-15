@@ -1,0 +1,3 @@
+# $Id: parameters_LABTEK_RR.txt 11023 2022-01-03 21:09:24Z rafalpa $
+SET:LABTEK_B^^^
+SET:HOST_WS^ADXL WS outbound host^^

@@ -1,0 +1,5 @@
+# $Id: interface_parameters_LABTEK_RR.txt 11433 2022-03-04 11:19:05Z rafalpa $
+CMN_SIN_TDC^additionalAttributes^AUXILIARY_ORDER=//orcLevel/orc/auxiliaryOrderNumber;REPORTABLE=//obr/reportable
+CMN_SIN_TDC^addGIforOrigin^WEB,CF,DMI,GENOP,SOFTID.NET,HIS.RALS,HIS.POCT,ADXL
+CMN_SIN_XDC^additionalAttributes^REPORTABLE=//obr/reportable
+CMN_SIN_RDC^additionalAttributes^REPORTABLE=//obr/reportable

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: LABTEK_IOE.dpl 10865 2021-11-26 08:57:27Z jzajdel $ -->
+<dpl name="Inbound LABTEK">
+	<items>
+		<inst code="ADXL.IN.LABTEK.OE.WS" name="ADXL.IN.LABTEK.OE.WS" model="ADXL.IN.LABTEK.OE.WS" category="INBOUND" esb="FARM" tz="US/Central" active="true" run="true" modifoverwrite="true">
+			<parameters/>
+		</inst>
+	</items>
+</dpl>

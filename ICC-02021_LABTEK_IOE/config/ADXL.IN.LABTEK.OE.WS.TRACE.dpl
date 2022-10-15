@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: ADXL.IN.LABTEK.OE.WS.TRACE.dpl 11147 2022-01-25 12:07:26Z rafalpa $ -->
+<!--  
+	inbound
+	- JSON request and response 
+	- GENE request and response 
+	to MOM viewer
+-->
+<dpl name="ADXL.IN.LABTEK.OE.WS.TRACE">
+	<items>
+		<inst code="ADXL.IN.LABTEK.OE.WS.TRACE" name="ADXL.IN.LABTEK.OE.WS.TRACE" model="SCC.INT.WS.TRACE" category="INBOUND_TRACE" esb="FARM" tz="US/Central" active="true" run="true" modifoverwrite="true" condition="" mu2param="">
+			<parameters>
+				<param code="serviceName" hidden="false" update="true" value="scc/services/client.TRACE"/>
+				<param code="saName" hidden="false" update="true" value="ADXL.IN.LABTEK.OE.WS"/>
+				<param code="traceType" hidden="false" update="true" value="SA"/>
+				<param code="traceQueryIdentificator" hidden="false" update="true" value="PROCESS_ID"/>
+				<param code="source" hidden="false" update="true" value="01_json2xml,06_canocnical2geneSrv,07_submitOrder,11_response2Json"/>
+				<param code="destination" hidden="false" update="true" value="02_validator,07_submitOrder,08_prepGI,12_prepExtResponse"/>
+				<param code="customExtractDirectory" hidden="false" update="true" value="${env.DICT}/gui/eis/clients/${!DICT.CLIENT_ID}/xslt/SCC.INT.WS.TRACE/extractInboundTraces.xslt"/>
+				<param code="customResponseDirectory" hidden="false" update="true" value="${env.DICT}/gui/eis/clients/${!DICT.CLIENT_ID}/xslt/SCC.INT.WS.TRACE/inboundResponse2MOM.xslt"/>
+			</parameters>
+		</inst>
+	</items>
+</dpl>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: ADXL.OUT.LABTEK.RESULTS.WS.dpl 12177 2022-07-21 11:02:57Z mzelazko $ -->
+<!--  
+	outbound Web Service for results to LabTek system (JSON REST WS interface) based on TEMPLATE.OUT.WS.GENERIC template 
+-->
+<dpl name="ADXL.OUT.LABTEK.RESULTS.WS">
+	<items>
+		<inst code="ADXL.OUT.LABTEK.RESULTS.WS" name="ADXL.OUT.LABTEK.RESULTS.WS" model="ADXL.OUT.LABTEK.RESULTS.WS" category="OUTBOUND" esb="FARM" tz="US/Central" active="true" run="true" modifoverwrite="true" condition="" mu2param="">
+			<todo/>
+			<parameters>
+				<param code="externalURL" hidden="false" update="true" value="${!DICT.HOST_WS}/Results"/>
+				<param code="outboundProtocolType" hidden="false" update="true" value="RestClient"/>
+				<param code="serviceName" hidden="false" update="true" value="ADXL.OUT.LABTEK.RESULTS.WS"/>
+				<param code="useSoap" hidden="false" update="true" value="false"/>
+				<param code="outboundMarshalerProperties" hidden="false" update="true" value="contentType=application/json&#10;restRespond=true&#10;locationURIXPath=Message/@resource&#10;methodXPath=Message/@method&#10;headersExpr=Authorization=xpath://Header/Authorization"/>
+				<param code="inboundMarshalerProperties" hidden="false" update="true" value="restRespond=true&#10;streamMarshaler.populateHttpRespondInfoToNm=true&#10;streamMarshaler.messageTransformer.parser.fixBadNames=true"/>
+				<param code="customRequestDirectory" hidden="false" update="true" value="${env.DICT}/gui/eis/clients/${!DICT.CLIENT_ID}/xslt/${INSTANCE_CODE}/prepResultRequest.xslt"/>
+				<param code="customResponseDirectory" hidden="false" update="true" value="${env.DICT}/gui/eis/clients/${!DICT.CLIENT_ID}/xslt/cmnPrepResponse.xslt"/>
+				<param code="activePostStoredProcedure" hidden="false" update="true" value="true"/>
+				<param code="postStoredProcedureQuery" hidden="false" update="true" value="call GI_TESTREL_PKG.TRELSetHISInfo_Flags($GI_TREL_SCCTESTINFO_OBJ, $GI_TREL_HISTESTINFO_OBJ, null, 1, $err, $errCode, 2)"/>
+				<param code="postStoredProcedureParams" hidden="false" update="true" value="list.count = 4&#10;&#10;list.1.class = com.scc.smx.components.jdbc.config.QueryParameterConfig&#10;list.1.placeHolder = GI_TREL_SCCTESTINFO_OBJ&#10;list.1.inout = in&#10;list.1.xpath = /Message/StoredProcParams/GI_TREL_SCCTESTINFO_OBJ&#10;list.1.paramType = oracle.sql.STRUCT&#10;&#10;list.2.class = com.scc.smx.components.jdbc.config.QueryParameterConfig&#10;list.2.placeHolder = GI_TREL_HISTESTINFO_OBJ&#10;list.2.inout = inout&#10;list.2.xpath = /Message/StoredProcParams/GI_TREL_HISTESTINFO_OBJ&#10;list.2.paramType = oracle.sql.STRUCT,STRUCT&#10;list.2.nullable = true&#10;&#10;list.3.class = com.scc.smx.components.jdbc.config.QueryParameterConfig&#10;list.3.placeHolder = err&#10;list.3.inout = out&#10;list.3.paramType = VARCHAR&#10;&#10;list.4.class = com.scc.smx.components.jdbc.config.QueryParameterConfig&#10;list.4.placeHolder = errCode&#10;list.4.inout = out&#10;list.4.paramType = ORA.NUMBER"/>
+				<param code="readTagsFormat" hidden="false" update="true" value="-"/>
+			</parameters>
+		</inst>
+	</items>
+</dpl>

@@ -1,0 +1,38 @@
+<!-- $Id: processing_LABTEK_IOE.xml 10865 2021-11-26 08:57:27Z jzajdel $ -->
+<processing-events revision="$Revision: 10865 $">
+	<processing-event>
+		<processing-code>ERROR – DUPLICATED</processing-code>
+		<processing-action>P</processing-action>
+		<processingAction>CREATE_PROBLEM</processingAction>
+		<result-code>SKIP_FAILED</result-code>
+		<description>Duplicated test for sample id already present in the system.</description>
+		<deprecated>false</deprecated>
+		<problem-category><name>INBOUND</name></problem-category>
+	</processing-event>
+	<processing-event>
+		<processing-code>ERROR - TIMEOUT</processing-code>
+		<processing-action>P</processing-action>
+		<processingAction>CREATE_PROBLEM</processingAction>
+		<result-code>SKIP_FAILED</result-code>
+		<description>Problem while calling GENE WS - timeout or missing response.</description>
+		<deprecated>false</deprecated>
+		<problem-category><name>INBOUND</name></problem-category>
+	</processing-event>
+	<processing-event>
+		<processing-code>ERROR - DATA</processing-code>
+		<processing-action>P</processing-action>
+		<processingAction>CREATE_PROBLEM</processingAction>
+		<result-code>SKIP_FAILED</result-code>
+		<description>Error while processing inbound request</description>
+		<deprecated>false</deprecated>
+		<problem-category><name>INBOUND</name></problem-category>
+	</processing-event>	
+	<processing-event>
+		<processing-code>ERROR - VALIDATION</processing-code>
+		<processing-action>P</processing-action>
+		<result-code>SKIP_FAILED</result-code>
+		<description>Inbound payload validation error - missing required field.</description>
+		<deprecated>false</deprecated>
+		<problem-category><name>INBOUND</name></problem-category>
+	</processing-event>
+</processing-events>
